@@ -5,9 +5,11 @@ from django.db import models
 
 class Account(models.Model):
 
+    user = models.ForeignKey('auth.User', blank=True)
     service = models.CharField(max_length=30)
     ident = models.CharField(max_length=255)
     authinfo = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=255)
     last_updated = models.DateTimeField(default=datetime(2001, 1, 1))
     last_success = models.DateTimeField(default=datetime.now)
 
@@ -27,3 +29,4 @@ class UserStream(models.Model):
     user = models.ForeignKey('auth.User')
     video = models.ForeignKey(Video)
     posted = models.DateTimeField()
+    poster = models.ForeignKey(Account)
