@@ -84,9 +84,11 @@ def complete_twitter(request):
 
     api = twitter.Api(settings.TWITTER_CONSUMER[0], settings.TWITTER_CONSUMER[1],
         access_token['oauth_token'], access_token['oauth_token_secret'])
-    dur = api.VerifyCredentials()
+    user = api.VerifyCredentials()
 
     account, created = Account.objects.get_or_create(user=request.user, service='twitter.com')
+    account.ident = user.id
+    account.display_name = user.name
     account.authinfo = ':'.join((access_token['oauth_token'], access_token['oauth_token_secret']))
     account.save()
 
