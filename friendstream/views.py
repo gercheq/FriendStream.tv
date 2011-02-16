@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from urllib import quote
 from urlparse import parse_qsl
@@ -20,12 +21,32 @@ def home(request):
         context_instance=RequestContext(request))
 
 
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super(DateTimeEncoder, self).default(obj)
+
+
 @login_required
 def videos(request):
     # TODO: handle paging parameters
-    videos = UserStream.objects.filter(user=request.user).order_by('-posted')[:10]
+    stream = UserStream.objects.filter(user=request.user).order_by('-posted').select_related()[:10]
 
-    body = json.dumps(list({'service': v.service, 'id': v.ident} for v in videos))
+    stream_data = ({
+        'posted': us.posted,
+        'video': {
+            'service': us.video.service,
+            'ident': us.video.ident,
+        },
+        'poster': {
+            'service': us.poster.service,
+            'ident': us.poster.ident,
+            'display_name': us.poster.display_name,
+        },
+    } for us in stream)
+
+    body = json.dumps(list(stream_data), cls=DateTimeEncoder)
     return HttpResponse(body, content_type='application/json')
 
 
