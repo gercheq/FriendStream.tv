@@ -14,6 +14,7 @@ from friendstream.models import Account, Video, UserStream
 log = logging.getLogger(__name__)
 
 YOUTUBE_URL_RE = re.compile(r'http://[^/]*youtube\.com/watch\?v=(?P<ident>[^&%]*)')
+VIMEO_URL_RE = re.compile(r'http://vimeo\.com/(?P<ident>\d+)')
 
 
 @task
@@ -106,3 +107,11 @@ def video_for_url(url):
         video_id = mo.group('ident')
         video, created = Video.objects.get_or_create(service='youtube.com', ident=video_id)
         return video
+
+    mo = VIMEO_URL_RE.match(url)
+    if mo:
+        video_id = mo.group('ident')
+        video, created = Video.objects.get_or_create(service='vimeo.com', ident=video_id)
+        return video
+
+    # nope!
