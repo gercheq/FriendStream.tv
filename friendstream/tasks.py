@@ -1,6 +1,7 @@
 from datetime import datetime
 import logging
 import re
+from urlparse import urljoin
 
 from celery.task import task
 from django.conf import settings
@@ -45,7 +46,13 @@ def poll_twitter(account):
         for url_obj in status.urls:
             url = url_obj.expanded_url or url_obj.url
             log.debug('Scanning url %s', url)
-            url = expand_url(url)
+
+            try:
+                url = expand_url(url)
+            except httplib2.RedirectLimit:
+                continue
+            # TODO: what does httplib2 raise when there's no Location header? (does it raise anything when follow_redirects=False?)
+
             video = video_for_url(url)
             if not video:
                 log.debug("Well, %s isn't a video, skip it", url)
@@ -74,12 +81,23 @@ def poll_twitter(account):
 
 def expand_url(url):
     h = httplib2.Http()
-    # TODO: don't grab the whole resource if we can help it
-    resp, cont = h.request(url)
-    try:
-        return resp['content-location']
-    except KeyError:
-        return url
+    # We don't get a content-location header when httplib2 follows redirects
+    # for a HEAD, so let's track it ourselves I guess.
+    h.follow_redirects = False
+
+    redirects = 5
+    while True:
+        resp, cont = h.request(url, method='HEAD', headers={'User-Agent': 'friendstream/1.0'})
+        if resp.status in (301, 302, 303, 307):
+            url = urljoin(url, resp['location'])
+
+            redirects -= 1
+            if redirects <= 0:
+                raise httplib2.RedirectLimit('', resp, cont)
+            continue
+        break
+
+    return url
 
 
 def video_for_url(url):
