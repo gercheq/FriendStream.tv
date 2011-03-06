@@ -64,7 +64,11 @@ def poll_twitter(account):
             except UserStream.DoesNotExist:
                 log.debug("Adding video %s to %s's stream", url, account.user.username)
                 poster, created = Account.objects.get_or_create(service='twitter.com', ident=status.user.id,
-                    defaults={'display_name': status.user.name})
+                    defaults={
+                        'display_name': status.user.name,
+                        'avatar_url': status.user.profile_image_url,
+                        'permalink_url': 'http://twitter.com/%s' % status.user.screen_name,
+                    })
                 created_at = datetime.utcfromtimestamp(status.created_at_in_seconds)
                 log.debug("Saving UserStream for user %r video %r poster %r posted %r", account.user, video, poster, created_at)
                 us = UserStream(
@@ -72,6 +76,7 @@ def poll_twitter(account):
                     video=video,
                     poster=poster,
                     posted=created_at,
+                    message=status.text,
                 )
                 us.save()
             else:
