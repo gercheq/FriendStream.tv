@@ -1,0 +1,8 @@
+oauth2
+python-twitter
+redis
+-e git+https://github.com/django/django.git#egg=Django
+south
+-e git+https://github.com/ask/celery.git#egg=celery
+django-celery
+django-social-auth
