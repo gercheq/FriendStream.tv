@@ -1,6 +1,7 @@
 # INSTALLED_APPS = (
 #     ...
 #     'djcelery',
+#     'south',
 #     'social_auth',
 #     'friendstream',
 # )
