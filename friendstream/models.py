@@ -1,9 +1,11 @@
 from datetime import datetime
 import logging
+from pprint import pformat
 
 from django.db import models
 import oauth2 as oauth
 from social_auth.signals import pre_update
+from social_auth.backends.facebook import FacebookBackend
 from social_auth.backends.twitter import TwitterBackend
 
 
@@ -23,13 +25,9 @@ class Account(models.Model):
 
 def update_twitter_account(sender, user, response, details, **kwargs):
     ident = response['id']
-    log = logging.getLogger(__name__)
-    log.debug('Making twitter account with ident %r', ident)
-    try:
-        account = Account.objects.get(user=user)
-    except Account.DoesNotExist:
-        account, created = Account.objects.get_or_create(service='twitter.com', ident=ident)
-        account.user = user
+    logging.getLogger(__name__).debug('Making twitter account with ident %r', ident)
+    account, created = Account.objects.get_or_create(service='twitter.com', ident=ident)
+    account.user = user
 
     screen_name = details['username']
     account.display_name = details.get('fullname', screen_name)
@@ -43,6 +41,24 @@ def update_twitter_account(sender, user, response, details, **kwargs):
     return True
 
 pre_update.connect(update_twitter_account, sender=TwitterBackend)
+
+
+def update_facebook_account(sender, user, response, details, **kwargs):
+    ident = response['id']
+    logging.getLogger(__name__).debug('Making facebook account with ident %r', ident)
+    account, created = Account.objects.get_or_create(service='facebook.com', ident=ident)
+    account.user = user
+
+    account.display_name = details['fullname']
+    account.permalink_url = response.get('link', '')
+    account.avatar_url = ''
+
+    account.authinfo = response['access_token']
+
+    account.save()
+    return True
+
+pre_update.connect(update_facebook_account, sender=FacebookBackend)
 
 
 class Video(models.Model):

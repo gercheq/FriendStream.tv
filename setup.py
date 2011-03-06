@@ -8,4 +8,5 @@ setup(
 
     requires=['Django', 'celery', 'redis', 'twitter', 'oauth2'],
     install_requires=['Django', 'celery', 'redis', 'python-twitter', 'oauth2'],
+    # plus https://github.com/facebook/python-sdk.git
 )

@@ -1,10 +1,12 @@
 from datetime import datetime
 import logging
+from pprint import pformat
 import re
 from urlparse import urljoin
 
 from celery.task import task
 from django.conf import settings
+import facebook
 import httplib2
 import twitter
 
@@ -33,6 +35,8 @@ def poll_account(account):
 
     if account.service == 'twitter.com':
         return poll_twitter(account)
+    if account.service == 'facebook.com':
+        return poll_facebook(account)
     # TODO: vimeo, youtube, facebook accounts
 
 
@@ -83,6 +87,59 @@ def poll_twitter(account):
                 log.debug("Video for %s already in %s's stream", url, account.user.username)
 
     log.debug('Done scanning statuses for %s', account.user.username)
+
+
+def poll_facebook(account):
+    facepi = facebook.GraphAPI(account.authinfo)
+
+    # TODO: not "links", "home" for friends' links (?)
+    home = facepi.get_object('me/links')
+    logging.getLogger(__name__).debug("Facebook links: %s", pformat(home))
+
+    for link in home['data']:
+        # TODO: what if it's not a link?
+        url = link['link']
+
+        try:
+            url = expand_url(url)
+        except httplib2.RedirectLimit:
+            continue
+        # TODO: what does httplib2 raise when there's no Location header? (does it raise anything when follow_redirects=False?)
+
+        video = video_for_url(url)
+        if not video:
+            log.debug("Well, %s isn't a video, skip it", url)
+            continue
+
+        try:
+            us = UserStream.objects.get(user=account.user, video=video)
+        except UserStream.DoesNotExist:
+            log.debug("Adding video %s to %s's stream", url, account.user.username)
+
+            ident = link['from']['id']
+            poster, created = Account.objects.get_or_create(service='facebook.com', ident=ident,
+                defaults={
+                    'display_name': link['from']['name'],
+                    'permalink_url': 'http://www.facebook.com/profile.php?id=%s' % ident,
+                    'avatar_url': '',
+                })
+
+            # TODO: parse link['created_time'] for timestamp
+            created_at = datetime.utcnow()
+
+            log.debug("Saving UserStream for user %r video %r poster %r posted %r", account.user, video, poster, created_at)
+            us = UserStream(
+                user=account.user,
+                video=video,
+                poster=poster,
+                posted=created_at,
+                message=link['message'],
+            )
+            us.save()
+        else:
+            log.debug("Video for %s already in %s's stream", url, account.user.username)
+
+    log.debug('Done scanning facebook home for %s', account.user.username)
 
 
 def expand_url(url):
