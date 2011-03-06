@@ -15,7 +15,7 @@ class Account(models.Model):
     permalink_url = models.CharField(max_length=255, blank=True)
     avatar_url = models.CharField(max_length=255, blank=True)
 
-    user = models.ForeignKey('auth.User', blank=True, null=True, unique=True)
+    user = models.ForeignKey('auth.User', blank=True, null=True)
     authinfo = models.CharField(max_length=255, blank=True)
     last_updated = models.DateTimeField(default=datetime(2001, 1, 1))
     last_success = models.DateTimeField(default=datetime.now)
