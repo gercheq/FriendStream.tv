@@ -10,7 +10,7 @@ class Account(models.Model):
     service = models.CharField(max_length=30)
     ident = models.CharField(max_length=255)
     display_name = models.CharField(max_length=255)
-    # TODO: permalink_url and userpic?
+    permalink_url = models.CharField(max_length=255)
     avatar_url = models.CharField(max_length=255)
 
     user = models.ForeignKey('auth.User', blank=True, null=True)
