@@ -42,7 +42,10 @@ def videos(request):
             'service': us.poster.service,
             'ident': us.poster.ident,
             'display_name': us.poster.display_name,
+            'avatar_url': us.poster.avatar_url,
         },
+        'message': us.message,
+        'id': us.pk,
     } for us in stream)
 
     body = json.dumps(list(stream_data), cls=DateTimeEncoder)
