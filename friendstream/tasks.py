@@ -39,7 +39,7 @@ def poll_account(account):
 def poll_twitter(account):
     # Fetch the Twitter user's neighborhood.
     access_key, access_secret = account.authinfo.split(':', 1)
-    api = twitter.Api(settings.TWITTER_CONSUMER[0], settings.TWITTER_CONSUMER[1], access_key, access_secret)
+    api = twitter.Api(settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET, access_key, access_secret)
 
     tl = api.GetFriendsTimeline(count=100, retweets=False, include_entities=True)  # MAXIMAL
     for status in tl:
