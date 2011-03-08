@@ -2,7 +2,7 @@
 
 {% block content %}
   {{ block.super }}
-    <div id="container">
+    <div id="container" style="display:none;">
 
         <a href="{% url begin backend="twitter" %}">Twitter</a>
         <a href="{% url begin backend="google-oauth" %}">Google</a>
