@@ -9,15 +9,24 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 import oauth2 as oauth
 
-from friendstream.models import UserStream, Account
+from friendstream.models import UserStream, Account, InterestedEmail
 
 
 @login_required
 def home(request):
     return render_to_response('home.html', {},
         context_instance=RequestContext(request))
+
+
+@csrf_exempt
+def save_email(request):
+    email_address = request.POST['email']
+    InterestedEmail.objects.create(email=email_address)
+
+    return HttpResponse(200, 'OK', content_type='text/plain')
 
 
 class DateTimeEncoder(json.JSONEncoder):

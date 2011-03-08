@@ -6,53 +6,6 @@
 **
 */
 
-/*
-** VALIDATION
-*/
-function validateEmail(email) {
- var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
- return email.match(re)
-}
-
-function submit_form(){
-
-   $("#submit-email").attr('disabled','disabled');
-
-    $.ajax({
-       type: "POST",
-       url: "dynamic/sendmail.php",
-       data: {
-         email: $('#input-email').attr('value')
-       },
-       success: function(msg){
-         $('#modal-contact-form .inner').html('<h3>Thank You!</h3><p>We will send you an invite as soon as possible.</p>');
-
-         init_cufon();
-
-       }
-    });
-}
-
-function check_errors(){
-  if( validateEmail($('#input-email').attr('value')) ){
-    $('.error-msg').fadeOut();
-    $("#input-email").removeClass('error');
-  }
-}
-
-function display_errors(){
-  // display errors
-  $("#input-email").addClass('error').after('<p class="error-msg">Please enter a valid email address.</p>');
-
-  // check if the errors are fixed
-  $("#input-email").keyup(function(){
-    check_errors();
-  });
-
-  $("#input-email").blur(function(){
-    check_errors();
-  });
-}
 
 /*
 ** STREAM PANEL

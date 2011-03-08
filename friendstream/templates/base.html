@@ -43,6 +43,7 @@
   <script>!window.jQuery && document.write(unescape('%3Cscript src="{{ STATIC_URL }}js/libs/jquery-1.5.1.js"%3E%3C/script%3E'))</script>
 
   <script src="{{ STATIC_URL }}jquery.tmpl.js"></script>
+  <script src="{{ STATIC_URL }}js/libs/jquery.tools.min.js"></script>
   <script type="text/javascript" src="{{ STATIC_URL }}swfobject.js"></script>
 
   <script src="{{ STATIC_URL }}js/plugins/cufon.js" type="text/javascript"></script>
@@ -64,7 +65,7 @@
 
         $.ajax({
            type: "POST",
-           url: "dynamic/sendmail.php",
+           url: "{% url save_email %}",
            data: {
              email: $('#input-email').attr('value')
            },
@@ -107,30 +108,22 @@
     init_cufon();
 
     $(document).ready(function(){
+        $('#yoxview-1').add('#yoxview-2').add('#yoxview-3').overlay({
+            mask: {
+                color: '#ebecff',
+                opacity: 0.9
+            },
+            closeOnClick: false
+        });
 
-    	$("#yoxview-3").yoxview({
-        allowInternalLinks: true,
-        onOpen: function(){
-
-          // Update Fonts in the Modal
-          init_cufon();
-
-          $("#submit-email").click( function(){
+        $("#submit-email").click( function(){
             if( validateEmail($('#input-email').attr('value')) ){
-              submit_form();
+                submit_form();
             } else {
-              display_errors();
+                display_errors();
             }
             return false;
-          });
-        }
-      });
-
-      // Trigger sign up model if user clicks on the tv and the logo as well
-      $('#yoxview-1, #yoxview-2').click(function(){
-        $('#yoxview-3').click();
-      });
-
+        });
     });
 	</script>
 
@@ -198,7 +191,7 @@
 
   <!-- scripts concatenated and minified via ant build script-->
   <script src="{{ STATIC_URL }}js/plugins.js"></script>
-  <script src="{{ STATIC_URL }}js/script.js"></script>
+  <!-- script src="{{ STATIC_URL }}js/script.js"></script -->
   <!-- end concatenated and minified scripts-->
 
 

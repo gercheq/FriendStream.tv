@@ -25,3 +25,9 @@ class UserStreamAdmin(admin.ModelAdmin):
         return u'%s (%s:%s)' % (meh.poster.display_name, meh.poster.service, meh.poster.ident)
 
 admin.site.register(UserStream, UserStreamAdmin)
+
+
+class InterestedEmailAdmin(admin.ModelAdmin):
+    list_display = ('email', 'created')
+
+admin.site.register(InterestedEmail, InterestedEmailAdmin)

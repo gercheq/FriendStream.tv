@@ -78,3 +78,9 @@ class UserStream(models.Model):
     posted = models.DateTimeField()
     poster = models.ForeignKey(Account)
     message = models.TextField(blank=True)
+
+
+class InterestedEmail(models.Model):
+
+    email = models.CharField(max_length=255)
+    created = models.DateTimeField(default=datetime.now)
