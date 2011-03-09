@@ -662,6 +662,7 @@ header h2{
 #input-email {
     clear: both;
     margin-bottom: 15px;
+    width: 440px !important;
 }
 
 #submit-email {
