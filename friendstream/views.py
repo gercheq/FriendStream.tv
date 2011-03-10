@@ -26,7 +26,7 @@ def save_email(request):
     email_address = request.POST['email']
     InterestedEmail.objects.create(email=email_address)
 
-    return HttpResponse(200, 'OK', content_type='text/plain')
+    return HttpResponse('OK', content_type='text/plain')
 
 
 class DateTimeEncoder(json.JSONEncoder):
