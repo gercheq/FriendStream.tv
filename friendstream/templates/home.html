@@ -14,12 +14,26 @@
          </div>
          <div id="navigation">
            <ul class="horizontal clearfix">
-             <li><a href="#" class="rc cufon selected">home</a></li>
+             <li><a href="#" class="rc cufon selected" data-target="stream">home</a></li>
              <li><a href="#" class="rc cufon">channels</a></li>
-             <li><a href="#" class="rc cufon">my account</a></li>
+             <li><a href="#" class="rc cufon" data-target="sidebar-account">my account</a></li>
              <li><a href="#" class="rc cufon">sign out</a></li>
          </div>
-         <div id="stream">
+
+        <div id="sidebar-account" class="sidebar">
+            {% if accounts.facebook %}
+                <h3><img src="{{ STATIC_URL }}css/images/facebook.png"> {{ accounts.facebook.display_name }} (<a href="#">disconnect</a>)</h3>
+            {% else %}
+                <h3><img src="{{ STATIC_URL }}css/images/facebook.png"> <a href="{% url begin backend="facebook" %}">connect</a></h3>
+            {% endif %}
+            {% if accounts.twitter %}
+                <h3><img src="{{ STATIC_URL }}css/images/twitter.png"> {{ accounts.twitter.display_name }} (<a href="#">disconnect</a>)</h3>
+            {% else %}
+                <h3><img src="{{ STATIC_URL }}css/images/twitter.png"> <a href="{% url begin backend="twitter" %}">connect</a></h3>
+            {% endif %}
+        </div>
+
+         <div id="stream" class="sidebar">
 
            <div class="s-item clearfix" id="video-123">
              <div class="si-thumb">
@@ -173,6 +187,18 @@
             });
         });
         */
+
+        $(document).ready(function () {
+            $('#navigation a').click(function () {
+                $('#navigation a.selected').removeClass('selected');
+                $(this).addClass('selected');
+
+                $('#stream-container .sidebar').hide();
+                console.log('REVEALING', $(this).attr('data-target'));
+                $('#' + $(this).attr('data-target')).show();
+            });
+        });
+
     </script>
 
 {% endblock %}

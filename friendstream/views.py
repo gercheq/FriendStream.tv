@@ -17,7 +17,8 @@ from friendstream.models import UserStream, Account, InterestedEmail
 
 @login_required
 def home(request):
-    return render_to_response('home.html', {},
+    accounts = dict((acc.service.split('.')[0], acc) for acc in request.user.accounts.all())
+    return render_to_response('home.html', {'accounts': accounts},
         context_instance=RequestContext(request))
 
 

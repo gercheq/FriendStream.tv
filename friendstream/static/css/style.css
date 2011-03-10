@@ -783,10 +783,23 @@ footer a:hover{
 }
 
 /*
+** OTHER SIDEBARS
+*/
+
+#sidebar-account h3 img {
+    vertical-align: middle;
+}
+
+.sidebar {
+    display: none;
+}
+
+/*
 ** STREAM
 */
 
 #stream {
+  display: block;
   background: #fafafa;
   border-top: 1px solid #FFF;
   border-bottom: 1px solid #c0dffe;
