@@ -15,7 +15,7 @@
          <div id="navigation">
            <ul class="horizontal clearfix">
              <li><a href="#" class="rc cufon tab nav-selected" data-target="aggregated-stream">home</a></li>
-             <li><a href="#" class="rc cufon tab" data-target="sidebar-channels">channels</a></li>
+             {# comment #}<li><a href="#" class="rc cufon tab" data-target="sidebar-channels">featured</a></li>{# endcomment #}
              <li><a href="#" class="rc cufon tab" data-target="sidebar-account">my account</a></li>
              <li><a href="{% url signout %}" class="rc cufon">sign out</a></li>
          </div>
@@ -34,10 +34,14 @@
                 {% endif %}
               </div>
 
+              {# comment #}
               <div id="sidebar-channels" class="sidebar-inner">
-                  <h3>Featured Channels</h3>
-
+                  <div class="sidebar-content">
+                    <p>If you would like to be featured, please <a href="mailto:contact@friendstream.tv">contact us</a>.</p>
+                  </div>
+                  {% include 'featured.html' %}
               </div>
+              {# endcomment #}
 
               <div id="aggregated-stream" class="sidebar-inner">
                <div class="loading"><img src="{{ STATIC_URL }}css/images/ajax-loader.gif"/ > Please wait while we are downloading videos shared by your friends...</div>

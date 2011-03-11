@@ -798,6 +798,11 @@ footer a:hover{
     display: none;
 }
 
+#sidebar-content{
+    padding: 20px;
+    font-size: 16px;
+}
+
 #aggregated-stream {
     display: block;
 }
@@ -938,7 +943,6 @@ footer a:hover{
 
 .avatar img {
   width: 80px;
-  height: 80px;
   display: block;
 }
 
