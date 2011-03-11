@@ -381,20 +381,77 @@ function get_thumbnail(video_provider, video_id, size)
 */
 
 
+/*****************************************************
+** VIDEO AUTOPLAY
+** just for future reference
+******************************************************
+
+    <div id="container">
+        <div id="youtube-player"></div>
+
+        <div id="videos"></div>
+    </div>
+
+    {% verbatim %}
+    <script id="video-template" type="text/x-jquery-tmpl">
+        <div class="video" data-service="${video.service}" data-ident="${video.ident}">
+            <strong>{{if (video.service == 'twitter.com')}} T {{/if}}</strong>
+            ${poster.display_name}
+        </div>
+    </script>
+    {% endverbatim %}
+
+        function onYouTubePlayerReady (playerid) {
+            $(document).trigger('playerready', [playerid]);
+        }
+
+        $(document).ready(function () {
+            // set up youtube
+            var params = { allowScriptAccess: 'always' };
+            var atts = { id: 'youtube-player' };
+            swfobject.embedSWF('http://www.youtube.com/apiplayer?enablejsapi=1&version=3', 'youtube-player',
+                '800', '450', '8', null, null, params, atts);
+        });
+
+        $('#video-template').template('video');
+
+        $(document).bind('playerready', function () {
+            // load the videos
+            $.getJSON('{% url videos %}', function (data) {
+                var $videos = $('#videos');
+                $.each(data, function (i, videodata) {
+                    var $newvideo = $.tmpl('video', videodata);
+                    $newvideo.bind('click', function () {
+                        $('#youtube-player').get(0).loadVideoById(videodata.video.ident);
+                    });
+                    $videos.append($newvideo);
+                });
+            });
+        });
+*/
+
+
+
+
+function setup_navigation(){
+
+  $('#navigation a').click(function() {
+      $('#navigation a.nav-selected').removeClass('nav-selected');
+      $(this).addClass('nav-selected');
+
+      $('#stream-container .sidebar-inner').hide();
+      // console.log('REVEALING', $(this).attr('data-target'));
+      $('#' + $(this).attr('data-target')).show();
+  });
+}
+
+
 /**************************************************************
 ** DOCUMENT READY
+** Common things for all the pages
 ***************************************************************/
 $(document).ready(function(){
   init_cufon();
-
-  // App
-  setup_stream_panel();
-  calculate_dimensions();
-  load_videos('videos.json');
-
-  // Home
-  setup_private_beta_modals();
-
 });
 
 /**************************************************************
