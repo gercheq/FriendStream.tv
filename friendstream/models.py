@@ -43,7 +43,7 @@ def update_twitter_account(sender, user, response, details, **kwargs):
 
     if new_connection:
         from friendstream.tasks import poll_account
-        poll_account.delay(account)
+        poll_account.delay(account.pk)
 
     return True
 
@@ -68,7 +68,7 @@ def update_facebook_account(sender, user, response, details, **kwargs):
 
     if new_connection:
         from friendstream.tasks import poll_account
-        poll_account.delay(account)
+        poll_account.delay(account.pk)
 
     return True
 
