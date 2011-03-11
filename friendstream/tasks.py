@@ -51,7 +51,7 @@ def poll_twitter(account):
     access_key, access_secret = account.authinfo.split(':', 1)
     api = twitter.Api(settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET, access_key, access_secret)
 
-    tl = api.GetFriendsTimeline(count=100, retweets=False, include_entities=True)  # MAXIMAL
+    tl = api.GetFriendsTimeline(count=100, retweets=True, include_entities=True)  # MAXIMAL
     for status in tl:
         log.debug('Checking URLs in status %r: %r', status, status.urls)
         for url_obj in status.urls:
