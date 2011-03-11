@@ -4,6 +4,7 @@ from pprint import pformat
 import re
 from urlparse import urljoin
 
+from celery.signals import task_failure
 from celery.task import task
 from django.conf import settings
 import iso8601
@@ -180,3 +181,15 @@ def video_for_url(url):
         return video
 
     # nope!
+
+
+def task_failed(exception, traceback, sender, task_id, signal, args, kwargs, einfo, **kw):
+    exc_info = (type(exception), exception, traceback)
+    log.error('Job failed: %s: %s', exception.__class__.__name__, str(exception),
+        exc_info=exc_info,
+        extra={
+            'data': {'task_id': task_id, 'sender': sender, 'args': args, 'kwargs': kwargs},
+        },
+    )
+
+task_failure.connect(task_failed)
