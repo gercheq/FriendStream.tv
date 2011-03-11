@@ -50,6 +50,10 @@ class DateTimeEncoder(json.JSONEncoder):
         return super(DateTimeEncoder, self).default(obj)
 
 
+def videos_old(request):
+    return HttpResponseRedirect(reverse('videos'))
+
+
 @login_required
 def videos(request):
     # TODO: handle paging parameters
