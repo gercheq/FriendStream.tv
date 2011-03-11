@@ -5,6 +5,7 @@ from urlparse import parse_qsl
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+import django.contrib.auth.views
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -14,6 +15,12 @@ from django.views.decorators.csrf import csrf_exempt
 import oauth2 as oauth
 
 from friendstream.models import UserStream, Account, InterestedEmail
+
+
+def root(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('home'))
+    return django.contrib.auth.views.login(request)
 
 
 @login_required
@@ -33,7 +40,7 @@ def save_email(request):
 
 def signout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('root'))
 
 
 class DateTimeEncoder(json.JSONEncoder):
