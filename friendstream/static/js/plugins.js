@@ -277,7 +277,7 @@ function load_videos(json_url){
       }
 
       var video ='<div class="s-item clearfix ' + json_data[key].poster.service.split('.',1) + '" id="video-'+ json_data[key].id + '">\
-                    <div class="si-thumb"><img src="css/images/video_thumb_default.jpg"/></div>\
+                    <div class="si-thumb"><img src="/static/css/images/video_thumb_default.jpg"/></div>\
                     <div class="si-info">\
                       <div class="si-video">\
                         <h3 class="siv-title">Video Title</h3>\
