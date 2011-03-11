@@ -14,9 +14,9 @@
          </div>
          <div id="navigation">
            <ul class="horizontal clearfix">
-             <li><a href="#" class="rc cufon nav-selected" data-target="stream">home</a></li>
-             <li><a href="#" class="rc cufon">channels</a></li>
-             <li><a href="#" class="rc cufon" data-target="sidebar-account">my account</a></li>
+             <li><a href="#" class="rc cufon tab nav-selected" data-target="aggregated-stream">home</a></li>
+             <li><a href="#" class="rc cufon tab" data-target="sidebar-channels">channels</a></li>
+             <li><a href="#" class="rc cufon tab" data-target="sidebar-account">my account</a></li>
              <li><a href="{% url signout %}" class="rc cufon">sign out</a></li>
          </div>
 
@@ -79,6 +79,7 @@
 
         $(document).ready(function () {
           setup_stream_panel();
+          setup_navigation();
           calculate_dimensions();
           load_videos('videos.json');
         });

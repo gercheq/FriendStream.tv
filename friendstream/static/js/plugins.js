@@ -300,7 +300,7 @@ function load_videos(json_url){
     });
 
     var tmp = items.join('');
-    $('#stream').html(tmp);
+    $('#aggregated-stream').html(tmp);
 
     // Get video details for each video in the stream from APIs
     $('.s-item').each(function(){
@@ -435,7 +435,7 @@ function get_thumbnail(video_provider, video_id, size)
 
 function setup_navigation(){
 
-  $('#navigation a').click(function() {
+  $('#navigation a.tab').click(function() {
       $('#navigation a.nav-selected').removeClass('nav-selected');
       $(this).addClass('nav-selected');
 

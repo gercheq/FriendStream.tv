@@ -794,8 +794,12 @@ footer a:hover{
     vertical-align: middle;
 }
 
-.sidebar {
+.sidebar-inner {
     display: none;
+}
+
+#aggregated-stream {
+    display: block;
 }
 
 /*
@@ -803,7 +807,6 @@ footer a:hover{
 */
 
 #stream {
-    display:block;
     background: #fafafa;
     border-top: 1px solid #FFF;
     border-bottom: 1px solid #c0dffe;
