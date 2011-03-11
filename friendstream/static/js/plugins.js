@@ -300,15 +300,19 @@ function load_videos(json_url){
     });
 
     var tmp = items.join('');
-    $('#aggregated-stream').html(tmp);
 
-    // Get video details for each video in the stream from APIs
-    $('.s-item').each(function(){
-      get_video_details($(this));
-    });
+    // if the JSON is not empty
+    if(items.length){
+      $('#aggregated-stream').html(tmp);
 
-    // Show the first video
-    show_first_video();
+      // Get video details for each video in the stream from APIs
+      $('.s-item').each(function(){
+        get_video_details($(this));
+      });
+
+      // Show the first video
+      show_first_video();
+    }
 
   });
 }
