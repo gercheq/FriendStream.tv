@@ -94,7 +94,7 @@ def poll_twitter(account):
 def poll_facebook(account):
     facepi = facebook.GraphAPI(account.authinfo)
 
-    home = facepi.get_object('me/home', limit=50)
+    home = facepi.get_object('me/home', limit=100)
     logging.getLogger(__name__).debug("Facebook links: %s", pformat(home))
 
     for link in home['data']:
