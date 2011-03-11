@@ -272,8 +272,8 @@ function load_videos(json_url){
       if (json_data[key].poster.service == "twitter.com"){
         var avatar_url_small = json_data[key].poster.avatar_url;
         var avatar_url = avatar_url_small.replace("_normal", "_reasonably_small");
-      } else {
-        var avatar_url = json_data[key].poster.avatar_url;
+      } else if ( json_data[key].poster.service  == "facebook.com") {
+        var avatar_url = "https://graph.facebook.com/" + json_data[key].poster.ident + "/picture?type=large";
       }
 
       var video ='<div class="s-item clearfix ' + json_data[key].poster.service.split('.',1) + '" id="video-'+ json_data[key].id + '">\
