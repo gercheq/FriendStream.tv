@@ -27,6 +27,8 @@ def update_twitter_account(sender, user, response, details, **kwargs):
     ident = response['id']
     logging.getLogger(__name__).debug('Making twitter account with ident %r', ident)
     account, created = Account.objects.get_or_create(service='twitter.com', ident=ident)
+
+    new_connection = True if not account.user or account.user.pk != user.pk else False
     account.user = user
 
     screen_name = details['username']
@@ -39,7 +41,7 @@ def update_twitter_account(sender, user, response, details, **kwargs):
 
     account.save()
 
-    if created:
+    if new_connection:
         from friendstream.tasks import poll_account
         poll_account.delay(account)
 
@@ -52,6 +54,8 @@ def update_facebook_account(sender, user, response, details, **kwargs):
     ident = response['id']
     logging.getLogger(__name__).debug('Making facebook account with ident %r', ident)
     account, created = Account.objects.get_or_create(service='facebook.com', ident=ident)
+
+    new_connection = True if not account.user or account.user.pk != user.pk else False
     account.user = user
 
     account.display_name = details['fullname']
@@ -62,7 +66,7 @@ def update_facebook_account(sender, user, response, details, **kwargs):
 
     account.save()
 
-    if created:
+    if new_connection:
         from friendstream.tasks import poll_account
         poll_account.delay(account)
 
