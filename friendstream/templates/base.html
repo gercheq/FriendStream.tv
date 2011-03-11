@@ -51,8 +51,12 @@
   <script src="{{ STATIC_URL }}js/plugins/Gotham_Rounded_Light_300.font.js"></script>
   <script src="{{ STATIC_URL }}js/plugins/yoxview/yoxview-init.js"></script>
 
+  <script type="text/javascript">
+    var post_url_from_home = {% url save_email %};
+  </script>
 
 	<script type="text/javascript">
+	/*
   	function validateEmail(email)
     {
      var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -125,6 +129,7 @@
             return false;
         });
     });
+    */
 	</script>
 
 
@@ -156,27 +161,65 @@
         <p>Connect all your accounts on friendstream.tv <span class="amp">&amp;</span> let us bring you the latest videos. Don’t forget friendstream is best enjoyed fullscreen.</p>
 
         <div class="contact-form">
-          <a href="#modal-contact-form" class="yoxview awesome button red large" id="yoxview-3" >Free! Get Started Now &nbsp; &raquo;</a>
+          <a href="#modal-contact-form" rel="facebox" class="hidden awesome button red large" id="yoxview-3" >Free! Get Started Now &nbsp; &raquo;</a>
+          <a href="#registration-form" rel="facebox" class="awesome button red large">Free! Get Started Now</a>
+
         </div>
 
         <div class="hidden">
-          <div id="modal-contact-form" class="rc">
-            <div class="inner yox-inner">
-              <h3>Sign Up Now</h3>
+
+          <div id="modal-contact-form" class="overlay rc">
+            <div class="inner overlay-inner">
+              <h3 class="cufons">Sign Up Now</h3>
               <p>We are still in private beta mode. Please sign up now and get early access to experience friendstream.tv!</p>
               <label for="input-email" id="label-email" class="cufon">Email:</label>
               <input type="text" class="rc input-email required" id="input-email" name="email" placeholder="Your Email Address"/>
               <a id="submit-email" href="#" class="awesome button red large">Sign Up</a>
             </div>
           </div>
-        </div>
 
+          <div id="registration-form" class="overlay rc">
+            <div id="rf-inner" class="inner overlay-inner">
+              <h3 class="cufon">Connect Your Accounts</h3>
+              <p>Connect your Facebook and Twitter accounts on friendstream.tv and we will start broadcasting videos shared by your friends.</p>
+              <p>Please note that you will be directed to Facebook and Twitter to give access to friendstream.tv after you click the buttons below.</p>
+              <ul class="registration-options">
+                <li class="r-facebook"><a href="{% url begin backend="facebook" %}">Sign in with Facebook</a></li>
+                <li class="r-twitter"><a href="{% url begin backend="twitter" %}">Sign in with Twitter</a></li>
+                <li class="r-youtube hidden"><a href="{% url begin backend="google-oauth" %}">Sign in with Youtube</a></li>
+                <li class="r-vimeo hidden"><a href="#">Sign in with Vimeo</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div id="tell-me-more" class="overlay rc">
+            <div id="tmm-inner" class="inner overlay-inner">
+              <h3 class="cufon">Friendstream.tv broadcasts videos shared by your friends</h3>
+              <p>Friendstream.tv is an application that broadcasts the videos shared by your friends. You can connect your social network accounts like Facebook and Twitter to friendstream.tv and watch non-stop videos shared by your friends on those services. You can also comment on and like videos, and reach them anytime through a personalized archive search.</p>
+              <p>Friendstream.tv is reachable through your computer, mobile device and television, and provides a simplified online viewing experience for people who get a ton of video recommendations throughout the day. When you just want to relax and be entertained, wouldn’t you rather have relevant content delivered to you instead of having to search for it? Friendstream.tv is for everyone who is tired of channel-surfing and never finding the show that they want. In addition to bringing all your friends’ video links into one place, it can also be a personalized channel on your TV of what your friends are watching.</p>
+
+              <p>Friendstream.tv will work on your Internet friendly television as an application. For non-internet enabled televisions additional hardware will provide a link to friendstream.tv. The application can be controlled remotely with laptops, tablets and smart phones.</p>
+
+              <p>Being launched in the Silicon Valley StartUp Bus competition, friendstream.tv is pioneering a new generation of television at SXSW 2011. The company is currently seed funded and raising its first round.</p>
+
+              <p>For additional questions or inquiries, please contact <a href="mailto:gercek@friendstream.tv">Gercek Karakus</a>.</p>
+
+              <ul class="registration-options clearfix">
+                <li class="r-facebook"><a href="{% url begin backend="facebook" %}">Sign in with Facebook</a></li>
+                <li class="r-twitter"><a href="{% url begin backend="twitter" %}">Sign in with Twitter</a></li>
+              </ul>
+            </div>
+          </div>
+
+
+
+        </div><!-- end of .hidden -->
       </div>
     </div>
 
     <footer class="container">
       <ul>
-        <li><a href="#">tell me more</a></li>
+        <li><a href="#tell-me-more" rel="facebox">tell me more</a></li>
         <li><a href="http://friendstreamtv.tumblr.com/" target="_blank">blog</a></li>
         <li><a href="http://twitter.com/friendstreamtv" target="_blank">follow us on twitter</a></li>
          <li class="last"><a href="http://www.facebook.com/pages/friendstreamtv/201141026563577?v=wall" target="_blank">facebook</a></li>
@@ -188,6 +231,7 @@
 
   <!-- Javascript at the bottom for fast page loading -->
 
+  <script src="{{ STATIC_URL }}js/libs/facebox.js"></script>
 
   <!-- scripts concatenated and minified via ant build script-->
   <script src="{{ STATIC_URL }}js/plugins.js"></script>

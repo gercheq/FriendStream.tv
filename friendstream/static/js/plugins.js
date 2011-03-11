@@ -18,7 +18,7 @@ function submit_form(){
 
   $.ajax({
      type: "POST",
-     url: "/save_email",
+     url: post_url_from_home,
      data: {
        email: $('#facebox #input-email').attr('value')
      },
