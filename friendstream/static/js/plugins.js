@@ -322,7 +322,7 @@ function generate_embed_code(video_provider, video_id){
   var embed_code = "";
 
   if (video_provider == "youtube.com") {
-    embed_code = '<iframe title="YouTube video player" width="100%" height="100%" src="http://www.youtube.com/embed/' + video_id + '" frameborder="0" allowfullscreen></iframe>';
+    embed_code = '<iframe title="YouTube video player" width="100%" height="100%" src="http://www.youtube.com/embed/' + video_id + '&autoplay=1" frameborder="0" allowfullscreen></iframe>';
   } else if (video_provider == "vimeo.com") {
     embed_code = '<iframe src="http://player.vimeo.com/video/' + video_id + '?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=1"  width="100%" height="100%" frameborder="0"></iframe>';
   }
