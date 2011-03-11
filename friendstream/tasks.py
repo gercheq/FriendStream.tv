@@ -92,13 +92,16 @@ def poll_twitter(account):
 def poll_facebook(account):
     facepi = facebook.GraphAPI(account.authinfo)
 
-    # TODO: not "links", "home" for friends' links (?)
-    home = facepi.get_object('me/links')
+    home = facepi.get_object('me/home', limit=50)
     logging.getLogger(__name__).debug("Facebook links: %s", pformat(home))
 
     for link in home['data']:
-        # TODO: what if it's not a link?
-        url = link['link']
+        if link['type'] != 'video':
+            continue
+        try:
+            url = link['link']
+        except KeyError:
+            continue
 
         try:
             url = expand_url(url)
@@ -133,7 +136,7 @@ def poll_facebook(account):
                 video=video,
                 poster=poster,
                 posted=created_at,
-                message=link['message'],
+                message=link.get('message', ''),
             )
             us.save()
         else:
