@@ -23,12 +23,12 @@
           <div id="stream" class="sidebar">
               <div id="sidebar-account" class="sidebar-inner">
                 {% if accounts.facebook %}
-                    <h3><img src="{{ STATIC_URL }}css/images/facebook.png"> {{ accounts.facebook.display_name }} (<a href="#">disconnect</a>)</h3>
+                    <h3><img src="{{ STATIC_URL }}css/images/facebook.png"> {{ accounts.facebook.display_name }} (<a href="{% url disconnect backend="facebook" %}">disconnect</a>)</h3>
                 {% else %}
                     <h3><img src="{{ STATIC_URL }}css/images/facebook.png"> <a href="{% url associate_begin backend="facebook" %}">connect</a></h3>
                 {% endif %}
                 {% if accounts.twitter %}
-                    <h3><img src="{{ STATIC_URL }}css/images/twitter.png"> {{ accounts.twitter.display_name }} (<a href="#">disconnect</a>)</h3>
+                    <h3><img src="{{ STATIC_URL }}css/images/twitter.png"> {{ accounts.twitter.display_name }} (<a href="{% url disconnect backend="twitter" %}">disconnect</a>)</h3>
                 {% else %}
                     <h3><img src="{{ STATIC_URL }}css/images/twitter.png"> <a href="{% url associate_begin backend="twitter" %}">connect</a></h3>
                 {% endif %}
