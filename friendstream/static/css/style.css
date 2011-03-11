@@ -803,6 +803,10 @@ footer a:hover{
     font-size: 16px;
 }
 
+#sidebar-account{
+    padding: 20px;
+}
+
 #aggregated-stream {
     display: block;
 }
