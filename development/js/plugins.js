@@ -129,7 +129,7 @@ function setup_stream_panel() {
 
     // Update user details
     var video_title = $this.find('.siv-title').html();
-    var video_service = $this.find('.friend-provider').text().split('.',1);
+    var video_service = $this.find('.friend-provider').html().split('.',1);
     var friend_avatar = $this.find('.friend-avatar').html();
     var friend_name = $this.find('.friend-name').html();
     var friend_message = $this.find('.friend-message').html();
@@ -138,7 +138,8 @@ function setup_stream_panel() {
     // WTF - The code below is not working.
     // video_service is assigned correctly but
     // class is not getting added to the p element :/
-    $video_container.find('.metadata').addClass(video_service);
+    // alert(video_service);
+    // $video_container.find('.metadata').addClass(video_service);
     $video_container.find('.avatar').html(friend_avatar);
     $video_container.find('blockquote').html(friend_message);
     $video_container.find('.friend-name').html(friend_name);
