@@ -38,6 +38,11 @@ def update_twitter_account(sender, user, response, details, **kwargs):
     account.authinfo = ':'.join((token.key, token.secret))
 
     account.save()
+
+    if created:
+        from friendstream.tasks import poll_account
+        poll_account.delay(account)
+
     return True
 
 pre_update.connect(update_twitter_account, sender=TwitterBackend)
@@ -56,6 +61,11 @@ def update_facebook_account(sender, user, response, details, **kwargs):
     account.authinfo = response['access_token']
 
     account.save()
+
+    if created:
+        from friendstream.tasks import poll_account
+        poll_account.delay(account)
+
     return True
 
 pre_update.connect(update_facebook_account, sender=FacebookBackend)
