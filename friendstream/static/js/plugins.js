@@ -440,8 +440,9 @@ function setup_navigation(){
       $(this).addClass('nav-selected');
 
       $('#stream-container .sidebar-inner').hide();
-      // console.log('REVEALING', $(this).attr('data-target'));
       $('#' + $(this).attr('data-target')).show();
+
+      return false;
   });
 }
 
