@@ -1,13 +1,1 @@
 {% extends "base.html" %}
-
-{% block content %}
-  {{ block.super }}
-    <div id="container" style="display:none;">
-
-        <a href="{% url begin backend="twitter" %}">Twitter</a>
-        <a href="{% url begin backend="google-oauth" %}">Google</a>
-        <a href="{% url begin backend="facebook" %}">Facebook</a>
-
-    </div>
-
-{% endblock %}
