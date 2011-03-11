@@ -3,6 +3,7 @@ import json
 from urllib import quote
 from urlparse import parse_qsl
 
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -28,6 +29,11 @@ def save_email(request):
     InterestedEmail.objects.create(email=email_address)
 
     return HttpResponse('OK', content_type='text/plain')
+
+
+def signout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('home'))
 
 
 class DateTimeEncoder(json.JSONEncoder):
