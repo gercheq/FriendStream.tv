@@ -158,8 +158,8 @@ function show_first_video() {
 function setup_private_beta_modals() {
 
   $('a[rel*=facebox]').facebox({
-    loadingImage : 'css/images/loading.gif',
-    closeImage   : 'css/images/closelabel.png'
+    loadingImage : '/static/css/images/loading.gif',
+    closeImage   : '/static/css/images/closelabel.png'
   });
 
   $(document).bind('reveal.facebox', function() {
