@@ -98,8 +98,10 @@ def poll_twitter(account):
 def poll_facebook(account):
     facepi = facebook.GraphAPI(account.authinfo)
 
-    home = facepi.get_object('me/home', limit=100)
-    logging.getLogger(__name__).debug("Facebook links: %s", pformat(home))
+    try:
+        home = facepi.get_object('me/home', limit=100)
+    except facebook.GraphAPIError, exc:
+        raise ValueError("Error reading news feed for facebook user %s (%s): %s" % (account.display_name, account.ident, str(exc)))
 
     for link in home['data']:
         if link['type'] != 'video':
