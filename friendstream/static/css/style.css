@@ -790,6 +790,10 @@ footer a:hover{
 /*
  * OTHER SIDEBARS
  */
+#sidebar-account h3{
+    font-size: 16px;
+}
+
 #sidebar-account h3 img {
     vertical-align: middle;
 }
