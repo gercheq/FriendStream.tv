@@ -26,12 +26,16 @@ def poll_all_accounts():
     all_accounts = Account.objects.exclude(user=None).exclude(authinfo='')
     for account in all_accounts:
         log.debug('Posting job to poll for %s:%s', account.service, account.ident)
-        poll_account.delay(account)
+        poll_account.delay(account.pk)
     log.debug('Done posting polls for all accounts')
 
 
 @task
-def poll_account(account):
+def poll_account(account_pk):
+    try:
+        account = Account.objects.get(pk=account_pk)
+    except Account.DoesNotExist:
+        return
     if not account.authinfo:
         return
 
