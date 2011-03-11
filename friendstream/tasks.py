@@ -6,6 +6,7 @@ from urlparse import urljoin
 
 from celery.task import task
 from django.conf import settings
+import iso8601
 import facebook
 import httplib2
 import twitter
@@ -127,8 +128,7 @@ def poll_facebook(account):
                     'avatar_url': '',
                 })
 
-            # TODO: parse link['created_time'] for timestamp
-            created_at = datetime.utcnow()
+            created_at = iso8601.parse_date(link['created_time']).replace(tzinfo=None)
 
             log.debug("Saving UserStream for user %r video %r poster %r posted %r", account.user, video, poster, created_at)
             us = UserStream(
