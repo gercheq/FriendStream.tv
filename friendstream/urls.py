@@ -8,5 +8,6 @@ urlpatterns = patterns('friendstream.views',
     url(r'^videos$', 'videos_old'),
     url(r'^save_email$', 'save_email', name='save_email'),
 
+    url(r'^disconnect/(?P<backend>[^/]+)/$', 'disconnect'),
     url(r'^signout$', 'signout', name='signout'),
 )

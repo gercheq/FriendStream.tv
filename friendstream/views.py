@@ -13,6 +13,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 import oauth2 as oauth
+import social_auth.views
 
 from friendstream.models import UserStream, Account, InterestedEmail
 
@@ -77,3 +78,19 @@ def videos(request):
 
     body = json.dumps(list(stream_data), cls=DateTimeEncoder)
     return HttpResponse(body, content_type='application/json')
+
+
+@login_required
+def disconnect(request, backend):
+    ret = social_auth.views.disconnect(request, backend)
+
+    # Detach any Accounts we have for this user too.
+    try:
+        acc = request.user.accounts.get(service='%s.com' % backend)
+    except Account.DoesNotExist:
+        pass
+    else:
+        acc.user = None
+        acc.save()
+
+    return ret
