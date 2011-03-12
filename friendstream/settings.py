@@ -41,3 +41,4 @@ GOOGLE_CONSUMER_KEY = ''
 GOOGLE_CONSUMER_SECRET = ''
 
 GOOGLE_OAUTH_EXTRA_SCOPE = ['http://gdata.youtube.com']
+FACEBOOK_EXTENDED_PERMISSIONS = ['offline_access']
