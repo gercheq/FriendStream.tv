@@ -5,12 +5,14 @@ from friendstream.models import *
 
 class AccountAdmin(admin.ModelAdmin):
     list_display = ('display_name', 'service', 'ident', 'user', 'last_updated')
+    search_fields = ('display_name', 'service', 'ident')
 
 admin.site.register(Account, AccountAdmin)
 
 
 class VideoAdmin(admin.ModelAdmin):
     list_display = ('service', 'ident')
+    search_fields = ('service', 'ident')
 
 admin.site.register(Video, VideoAdmin)
 
@@ -29,11 +31,13 @@ admin.site.register(UserStream, UserStreamAdmin)
 
 class InterestedEmailAdmin(admin.ModelAdmin):
     list_display = ('email', 'created')
+    search_fields = ('email',)
 
 admin.site.register(InterestedEmail, InterestedEmailAdmin)
 
 
 class UrlAdmin(admin.ModelAdmin):
     list_display = ('original', 'target', 'added')
+    search_fields = ('original', 'target')
 
 admin.site.register(Url, UrlAdmin)
