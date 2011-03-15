@@ -4,7 +4,7 @@ from friendstream.models import *
 
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('display_name', 'service', 'ident', 'user')
+    list_display = ('display_name', 'service', 'ident', 'user', 'last_updated')
 
 admin.site.register(Account, AccountAdmin)
 

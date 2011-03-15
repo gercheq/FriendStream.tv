@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 from pprint import pformat
 import re
@@ -39,12 +39,21 @@ def poll_account(account_pk):
         return
     if not account.authinfo:
         return
+    if account.user is None:
+        log.debug("Oops, account %r has no user?", account)
+        return
+    if account.last_updated > datetime.now() - timedelta(minutes=30):
+        log.debug("Skipping %s's %s stream (updated too soon)", account.user.username, account.service)
+        return
 
     if account.service == 'twitter.com':
-        return poll_twitter(account)
-    if account.service == 'facebook.com':
-        return poll_facebook(account)
+        poll_twitter(account)
+    elif account.service == 'facebook.com':
+        poll_facebook(account)
     # TODO: vimeo, youtube, facebook accounts
+
+    account.last_updated = datetime.now()
+    account.save()
 
 
 def poll_twitter(account):
