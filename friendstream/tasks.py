@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import httplib
 import logging
 from pprint import pformat
 import re
@@ -61,7 +62,17 @@ def poll_twitter(account):
     access_key, access_secret = account.authinfo.split(':', 1)
     api = twitter.Api(settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET, access_key, access_secret)
 
-    tl = api.GetFriendsTimeline(count=100, retweets=True, include_entities=True)  # MAXIMAL
+    try:
+        tl = api.GetFriendsTimeline(count=100, retweets=True, include_entities=True)  # MAXIMAL
+    except twitter.TwitterError, exc:
+        # TODO: ugh use a code or something, not an error message (but the twitter library hides that from us)
+        if str(exc) == 'Could not authenticate with OAuth.':
+            log.debug("Oops, twitter user %s (%s) has a bad key", account.display_name, account.ident)
+            account.error = True
+            account.save()
+            return
+        raise
+
     for status in tl:
         for url_obj in status.urls:
             url = url_obj.expanded_url or url_obj.url
@@ -113,7 +124,7 @@ def poll_facebook(account):
             account.error = True
             account.save()
             return
-        raise ValueError("Error reading news feed for facebook user %s (%s): %r: %s" % (account.display_name, account.ident, exc.type, str(exc)))
+        raise
 
     for link in home.get('data', ()):
         if link['type'] != 'video':
@@ -182,11 +193,8 @@ def expand_url(orig_url):
     while True:
         try:
             resp, cont = h.request(url, method='HEAD', headers={'User-Agent': 'friendstream/1.0'})
-        except httplib2.ServerNotFoundError:
-            log.debug("No such server for %s?", url)
-            return url
-        except socket.timeout:
-            log.debug("Request for %s timed out; I guess that's the best we can do?", url)
+        except (httplib2.ServerNotFoundError, httplib.BadStatusLine, socket.timeout), exc:
+            log.debug("Oops, %s for URL %s (use it for now): %s", type(exc).__name__, url, str(exc))
             return url
 
         if resp.status in (301, 302, 303, 307):
