@@ -105,3 +105,4 @@ class Url(models.Model):
 
     original = models.CharField(max_length=255, unique=True)
     target = models.CharField(max_length=255)
+    added = models.DateTimeField(default=datetime.now)
