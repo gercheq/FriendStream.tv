@@ -2,6 +2,7 @@ from datetime import datetime
 import logging
 from pprint import pformat
 import re
+import socket
 from urlparse import urljoin
 
 from celery.signals import task_failure
@@ -153,14 +154,19 @@ def poll_facebook(account):
 
 
 def expand_url(url):
-    h = httplib2.Http()
+    h = httplib2.Http(timeout=10)
     # We don't get a content-location header when httplib2 follows redirects
     # for a HEAD, so let's track it ourselves I guess.
     h.follow_redirects = False
 
     redirects = 5
     while True:
-        resp, cont = h.request(url, method='HEAD', headers={'User-Agent': 'friendstream/1.0'})
+        try:
+            resp, cont = h.request(url, method='HEAD', headers={'User-Agent': 'friendstream/1.0'})
+        except socket.timeout:
+            log.debug("Request for %s timed out; I guess that's the best we can do?", url)
+            return url
+
         if resp.status in (301, 302, 303, 307):
             url = urljoin(url, resp['location'])
 
