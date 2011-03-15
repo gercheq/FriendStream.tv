@@ -206,7 +206,7 @@ def expand_url(orig_url):
             continue
         break
 
-    Url.objects.create(original=orig_url, target=url)
+    Url.objects.get_or_create(original=orig_url, defaults={'target': url})
     return url
 
 
