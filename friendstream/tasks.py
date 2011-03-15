@@ -111,9 +111,15 @@ def poll_facebook(account):
     try:
         home = facepi.get_object('me/home', limit=100)
     except facebook.GraphAPIError, exc:
-        raise ValueError("Error reading news feed for facebook user %s (%s): %s" % (account.display_name, account.ident, str(exc)))
+        if exc.type == 'OAuthException':
+            # mark account as busted
+            log.debug("Oops, facebook user %s (%s) has a bad key", account.display_name, account.ident)
+            account.error = True
+            account.save()
+            return
+        raise ValueError("Error reading news feed for facebook user %s (%s): %r: %s" % (account.display_name, account.ident, exc.type, str(exc)))
 
-    for link in home['data']:
+    for link in home.get('data', ()):
         if link['type'] != 'video':
             continue
         try:
