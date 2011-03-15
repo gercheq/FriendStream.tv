@@ -28,12 +28,12 @@ def poll_all_accounts():
     all_accounts = Account.objects.exclude(user=None).exclude(authinfo='')
     for account in all_accounts:
         log.debug('Posting job to poll for %s:%s', account.service, account.ident)
-        poll_account.delay(account.pk)
+        poll_account.delay(account.pk, limited=True)
     log.debug('Done posting polls for all accounts')
 
 
 @task
-def poll_account(account_pk):
+def poll_account(account_pk, limited=False):
     try:
         account = Account.objects.get(pk=account_pk)
     except Account.DoesNotExist:
@@ -43,7 +43,8 @@ def poll_account(account_pk):
     if account.user is None:
         log.debug("Oops, account %r has no user?", account)
         return
-    if account.last_updated > datetime.now() - timedelta(minutes=30):
+
+    if limited and account.last_updated > datetime.now() - timedelta(minutes=14):
         log.debug("Skipping %s's %s stream (updated too soon)", account.user.username, account.service)
         return
 
