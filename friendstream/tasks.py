@@ -13,7 +13,7 @@ import facebook
 import httplib2
 import twitter
 
-from friendstream.models import Account, Video, UserStream
+from friendstream.models import Account, Video, UserStream, Url
 
 
 log = logging.getLogger(__name__)
@@ -63,11 +63,8 @@ def poll_twitter(account):
 
     tl = api.GetFriendsTimeline(count=100, retweets=True, include_entities=True)  # MAXIMAL
     for status in tl:
-        log.debug('Checking URLs in status %r: %r', status, status.urls)
         for url_obj in status.urls:
             url = url_obj.expanded_url or url_obj.url
-            log.debug('Scanning url %s', url)
-
             try:
                 url = expand_url(url)
             except httplib2.RedirectLimit:
@@ -76,7 +73,6 @@ def poll_twitter(account):
 
             video = video_for_url(url)
             if not video:
-                log.debug("Well, %s isn't a video, skip it", url)
                 continue
 
             try:
@@ -135,7 +131,6 @@ def poll_facebook(account):
 
         video = video_for_url(url)
         if not video:
-            log.debug("Well, %s isn't a video, skip it", url)
             continue
 
         try:
@@ -168,16 +163,28 @@ def poll_facebook(account):
     log.debug('Done scanning facebook home for %s', account.user.username)
 
 
-def expand_url(url):
+def expand_url(orig_url):
+    try:
+        url_obj = Url.objects.get(original=orig_url)
+    except Url.DoesNotExist:
+        pass
+    else:
+        return url_obj.target
+
+    log.debug('Scanning url %s', orig_url)
     h = httplib2.Http(timeout=10)
     # We don't get a content-location header when httplib2 follows redirects
     # for a HEAD, so let's track it ourselves I guess.
     h.follow_redirects = False
 
     redirects = 5
+    url = orig_url
     while True:
         try:
             resp, cont = h.request(url, method='HEAD', headers={'User-Agent': 'friendstream/1.0'})
+        except httplib2.ServerNotFoundError:
+            log.debug("No such server for %s?", url)
+            return url
         except socket.timeout:
             log.debug("Request for %s timed out; I guess that's the best we can do?", url)
             return url
@@ -191,6 +198,7 @@ def expand_url(url):
             continue
         break
 
+    Url.objects.create(original=orig_url, target=url)
     return url
 
 
@@ -208,6 +216,7 @@ def video_for_url(url):
         return video
 
     # nope!
+    log.debug("Well, %s isn't a video, skip it", url)
 
 
 def task_failed(exception, traceback, sender, task_id, signal, args, kwargs, einfo, **kw):

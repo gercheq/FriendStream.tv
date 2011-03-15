@@ -99,3 +99,9 @@ class InterestedEmail(models.Model):
 
     email = models.CharField(max_length=255)
     created = models.DateTimeField(default=datetime.now)
+
+
+class Url(models.Model):
+
+    original = models.CharField(max_length=255, unique=True)
+    target = models.CharField(max_length=255)

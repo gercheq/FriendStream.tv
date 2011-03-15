@@ -31,3 +31,9 @@ class InterestedEmailAdmin(admin.ModelAdmin):
     list_display = ('email', 'created')
 
 admin.site.register(InterestedEmail, InterestedEmailAdmin)
+
+
+class UrlAdmin(admin.ModelAdmin):
+    list_display = ('original', 'target')
+
+admin.site.register(Url, UrlAdmin)
