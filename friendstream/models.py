@@ -40,6 +40,8 @@ def update_twitter_account(sender, user, response, details, **kwargs):
     token = oauth.Token.from_string(response['access_token'])
     account.authinfo = ':'.join((token.key, token.secret))
 
+    # Reset any error it may have had.
+    account.error = False
     account.save()
 
     if new_connection:
@@ -65,6 +67,8 @@ def update_facebook_account(sender, user, response, details, **kwargs):
 
     account.authinfo = response['access_token']
 
+    # Reset any error it may have had.
+    account.error = False
     account.save()
 
     if new_connection:

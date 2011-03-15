@@ -40,6 +40,9 @@ def poll_account(account_pk, limited=False):
         return
     if not account.authinfo:
         return
+    if account.error:
+        # Don't try to scan accounts that have errors until they're saved again.
+        return
     if account.user is None:
         log.debug("Oops, account %r has no user?", account)
         return
