@@ -8,8 +8,10 @@ env.hosts = ['gercheq@friendstream.tv']
 ROOT_DIR = '/home/gercheq/webapps/django'
 
 
-def upload():
+def push():
     rsync_project(remote_dir='%s/lib/python2.6' % ROOT_DIR, local_dir='friendstream', exclude='*.pyc')
+
+upload = push
 
 def restart_apache():
     with cd(ROOT_DIR):
