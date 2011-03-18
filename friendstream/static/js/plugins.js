@@ -263,58 +263,91 @@ var video_json;
 
 function load_videos(json_url){
 
-  $.getJSON(json_url, function(json_data) {
-    video_json = json_data;
-    var items = [];
-    $.each(json_data, function(key, val) {
+  var video_list_empty = 1;
 
-      // clean up twitter avatar_url
-      if (json_data[key].poster.service == "twitter.com"){
-        var avatar_url_small = json_data[key].poster.avatar_url;
-        var avatar_url = avatar_url_small.replace("_normal", "_reasonably_small");
-      } else if ( json_data[key].poster.service  == "facebook.com") {
-        var avatar_url = "https://graph.facebook.com/" + json_data[key].poster.ident + "/picture?type=large";
-      }
+  $.ajax({
+    url: json_url,
+    dataType: 'json',
+    async: true, /* If set to non-async, browser shows page as "Loading.."*/
+    cache: false,
+    timeout: 30000, /* Timeout in ms */
+    success: function(json_data) {
 
-      var video ='<div class="s-item clearfix ' + json_data[key].poster.service.split('.',1) + '" id="video-'+ json_data[key].id + '">\
-                    <div class="si-thumb"><img src="/static/css/images/video_thumb_default.jpg"/></div>\
-                    <div class="si-info">\
-                      <div class="si-video">\
-                        <h3 class="siv-title">Video Title</h3>\
-                        <div class="siv-desc hidden">Video Description</div>\
-                        <div class="siv-id hidden">' + json_data[key].video.ident + '</div>\
-                        <div class="siv-provider hidden">' + json_data[key].video.service + '</div>\
-                      </div>\
-                      <div class="si-user">\
-                        <span class="icon"></span> \
-                        <span class="friend-name ' + json_data[key].poster.ident + '">' + json_data[key].poster.display_name + '</span>\
-                        <div class="hidden friend-avatar">\
-                          <img src="' +  avatar_url + '">\
+
+      video_json = json_data;
+      var items = [];
+      $.each(json_data, function(key, val) {
+
+        // clean up twitter avatar_url
+        if (json_data[key].poster.service == "twitter.com"){
+          var avatar_url_small = json_data[key].poster.avatar_url;
+          var avatar_url = avatar_url_small.replace("_normal", "_reasonably_small");
+        } else if ( json_data[key].poster.service  == "facebook.com") {
+          var avatar_url = "https://graph.facebook.com/" + json_data[key].poster.ident + "/picture?type=large";
+        }
+
+        var video ='<div class="s-item clearfix ' + json_data[key].poster.service.split('.',1) + '" id="video-'+ json_data[key].id + '">\
+                      <div class="si-thumb"><img src="/static/css/images/video_thumb_default.jpg"/></div>\
+                      <div class="si-info">\
+                        <div class="si-video">\
+                          <h3 class="siv-title">Video Title</h3>\
+                          <div class="siv-desc hidden">Video Description</div>\
+                          <div class="siv-id hidden">' + json_data[key].video.ident + '</div>\
+                          <div class="siv-provider hidden">' + json_data[key].video.service + '</div>\
                         </div>\
-                        <div class="hidden friend-provider">' + json_data[key].poster.service + '</div>\
-                        <div class="hidden friend-message">' +  json_data[key].message + '</div>\
+                        <div class="si-user">\
+                          <span class="icon"></span> \
+                          <span class="friend-name ' + json_data[key].poster.ident + '">' + json_data[key].poster.display_name + '</span>\
+                          <div class="hidden friend-avatar">\
+                            <img src="' +  avatar_url + '">\
+                          </div>\
+                          <div class="hidden friend-provider">' + json_data[key].poster.service + '</div>\
+                          <div class="hidden friend-message">' +  json_data[key].message + '</div>\
+                        </div>\
                       </div>\
-                    </div>\
-                  </div>';
-      items.push(video);
-    });
-
-    var tmp = items.join('');
-
-    // if the JSON is not empty
-    if(items.length){
-      $('#aggregated-stream').html(tmp);
-
-      // Get video details for each video in the stream from APIs
-      $('.s-item').each(function(){
-        get_video_details($(this));
+                    </div>';
+        items.push(video);
       });
 
-      // Show the first video
-      show_first_video();
+      var tmp = items.join('');
+
+
+      // if the JSON is not empty
+      if(items.length){
+
+        // alert('items length is ' + items.length);
+
+        video_list_empty = 0;
+
+        $('#aggregated-stream').html(tmp);
+
+        // Get video details for each video in the stream from APIs
+        $('.s-item').each(function(){
+          get_video_details($(this));
+        });
+
+        // Show the first video
+        show_first_video();
+      }
+      else {
+        // if the videos.json file is empty, make another ajax request in 15seconds
+        setTimeout(
+             'load_videos("/videos.json")', /* Try again after.. */
+             "15000"); /* milliseconds (15seconds) */
+      }
+
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown){
+          alert("error: ", textStatus + " (" + errorThrown + ")");
+          setTimeout(
+              'load_videos("/videos.json")', /* Try again after.. */
+              "15000"); /* milliseconds (15seconds) */
     }
 
   });
+
+
+
 }
 
 /*
