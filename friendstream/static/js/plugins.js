@@ -367,80 +367,6 @@ function generate_embed_code(video_provider, video_id){
   return embed_code;
 }
 
-/*
-** Setup Video Navigation
-** Prev/Next Buttons for now
-*/
-
-function play_video(string_video){
-
-
-  switch(string_video)
-  {
-  case "next":
-
-    break;
-
-  case "prev":
-
-    break;
-
-  default:
-    console.log('available strings are "next" and "prev".');
-    return false;
-  }
-
-
-}
-
-
-function setup_video_navigation(){
-
-  var $stream = $('#aggregated-stream');
-
-  // Play the next video in stream if user clicks the next button
-  $('#vc-next').click(function(){
-    var $next_video = $stream.find('.selected').next();
-    if($next_video.length){
-      $next_video.click();
-    }
-  });
-
-  // Play the previous video in stream if user clicks the next button
-  $('#vc-prev').click(function(){
-    var $prev_video = $stream.find('.selected').prev();
-    if($prev_video.length){
-      $prev_video.click();
-    }
-  });
-
-
-  $(document).keydown(function(e){
-
-    var keyCode = e.keyCode || e.which,
-        arrow = {left: 37, up: 38, right: 39, down: 40 };
-
-    switch (keyCode) {
-      case arrow.left:
-        $('#vc-prev').click();
-      break;
-      case arrow.up:
-        //..
-      break;
-      case arrow.right:
-        $('#vc-next').click();
-      break;
-      case arrow.down:
-        //..
-      break;
-    }
-
-
-
-  });
-
-}
-
 
 /*
 ** Get video details such as thumbnail, title, description
@@ -551,7 +477,55 @@ function get_thumbnail(video_provider, video_id, size)
 */
 
 
+/*
+** Setup Video Navigation
+** Prev/Next Buttons for now
+*/
 
+function setup_video_navigation(){
+
+  var $stream = $('#aggregated-stream');
+
+  // Play the next video in stream if user clicks the next button
+  $('#vc-next').click(function(){
+    var $next_video = $stream.find('.selected').next();
+    if($next_video.length){
+      $next_video.click();
+    }
+  });
+
+  // Play the previous video in stream if user clicks the next button
+  $('#vc-prev').click(function(){
+    var $prev_video = $stream.find('.selected').prev();
+    if($prev_video.length){
+      $prev_video.click();
+    }
+  });
+
+
+  $(document).keydown(function(e){
+
+    var keyCode = e.keyCode || e.which,
+        arrow = {left: 37, up: 38, right: 39, down: 40 };
+
+    switch (keyCode) {
+      case arrow.left:
+        $('#vc-prev').click();
+      break;
+      case arrow.up:
+        //..
+      break;
+      case arrow.right:
+        $('#vc-next').click();
+      break;
+      case arrow.down:
+        //..
+      break;
+    }
+
+  });
+
+}
 
 
 function setup_navigation(){
