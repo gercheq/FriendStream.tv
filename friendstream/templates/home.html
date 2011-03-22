@@ -62,6 +62,11 @@
 
        <div id="video-container">
 
+        <div id="video-controls">
+          <a id="vc-prev" class="vc-item">Prev</a>
+          <a id="vc-next" class="vc-item">Next</a>
+        </div>
+
          <div id="video-embed-shadow" class="drop-shadow lifted"></div>
 
          <div id="video-embed" class=""></div>
@@ -84,9 +89,11 @@
         $(document).ready(function () {
           setup_stream_panel();
           setup_navigation();
+          setup_video_navigation();
           calculate_dimensions();
           load_videos('videos.json');
         });
+
 
     </script>
 

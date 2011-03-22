@@ -333,7 +333,7 @@ function load_videos(json_url){
         // if the videos.json file is empty, make another ajax request in 15seconds
         setTimeout(
              'load_videos("/videos.json")', /* Try again after.. */
-             "15000"); /* milliseconds (15seconds) */
+             "30000"); /* milliseconds (15seconds) */
       }
 
     },
@@ -341,7 +341,7 @@ function load_videos(json_url){
           alert("error: ", textStatus + " (" + errorThrown + ")");
           setTimeout(
               'load_videos("/videos.json")', /* Try again after.. */
-              "15000"); /* milliseconds (15seconds) */
+              "30000"); /* milliseconds (15seconds) */
     }
 
   });
@@ -367,6 +367,30 @@ function generate_embed_code(video_provider, video_id){
   return embed_code;
 }
 
+/*
+** Setup Video Navigation
+** Prev/Next Buttons for now
+*/
+function setup_video_navigation(){
+
+  var $stream = $('#aggregated-stream');
+
+  $('#vc-next').click(function(){
+    var $next_video = $stream.find('.selected').next();
+    if($next_video.length){
+      $next_video.click();
+    }
+  });
+
+  $('#vc-prev').click(function(){
+    var $prev_video = $stream.find('.selected').prev();
+    if($prev_video.length){
+      $prev_video.click();
+    }
+  });
+
+}
+
 
 /*
 ** Get video details such as thumbnail, title, description
@@ -380,9 +404,18 @@ function get_video_details($stream_video) {
   if (video_provider == "youtube.com"){
     var url = "http://gdata.youtube.com/feeds/api/videos/" + video_id + "?v=2&alt=json"
     $.get(url, function(data) {
-        $stream_video.find('h3').html( data.entry.title.$t );
-        $stream_video.find('.siv-desc').html( data.entry.media$group.media$description.$t );
-        $stream_video.find('.si-thumb img').attr('src', data.entry.media$group.media$thumbnail[0].url );
+      if(data.entry){
+        var video_title = data.entry.title.$t || "";
+        var video_desc = data.entry.media$group.media$description.$t  || "";
+        var video_url = data.entry.media$group.media$thumbnail[0].url  || "";
+
+        $stream_video.find('h3').html(video_title);
+        $stream_video.find('.siv-desc').html(video_desc);
+        $stream_video.find('.si-thumb img').attr('src',  video_url);
+
+      } else {
+        console.log("Video " + video_id + " can't be loaded from " + video_provider +".");
+      }
     });
   } else if (video_provider == "vimeo.com") {
     var url =  "http://vimeo.com/api/v2/video/" + video_id + ".json?callback=?";
@@ -466,6 +499,7 @@ function get_thumbnail(video_provider, video_id, size)
             });
         });
 */
+
 
 
 
