@@ -1,14 +1,17 @@
-from os.path import expanduser
+from os.path import expanduser as _expanduser
 
 from fabric.api import run, cd, env
 from fabric.contrib.project import rsync_project
-from paramiko.config import SSHConfig
+from paramiko.config import SSHConfig as _SSHConfig
 
 
 env.hosts = ['friendstream.tv']
 
 ROOT_DIR = '/home/gercheq/webapps/django'
 
+
+def host_type():
+    run('uname -s')
 
 def push():
     rsync_project(remote_dir='%s/lib/python2.6' % ROOT_DIR, local_dir='friendstream', exclude='*.pyc')
@@ -39,9 +42,11 @@ def restart():
     restart_worker()
 
 
-def annotate_hosts_with_ssh_config_info():
+def _annotate_hosts_with_ssh_config_info():
     def hostinfo(host, config):
         hive = config.lookup(host)
+        if 'hostname' in hive:
+            host = hive['hostname']
         if 'user' in hive:
             host = '%s@%s' % (hive['user'], host)
         if 'port' in hive:
@@ -49,15 +54,15 @@ def annotate_hosts_with_ssh_config_info():
         return host
 
     try:
-        config_file = file(expanduser('~/.ssh/config'))
+        config_file = file(_expanduser('~/.ssh/config'))
     except IOError:
         pass
     else:
-        config = SSHConfig()
+        config = _SSHConfig()
         config.parse(config_file)
-        keys = [expanduser(config.lookup(host).get('identityfile', None))
+        keys = [config.lookup(host).get('identityfile', None)
             for host in env.hosts]
-        env.key_filename = [key for key in keys if key is not None]
+        env.key_filename = [_expanduser(key) for key in keys if key is not None]
         env.hosts = [hostinfo(host, config) for host in env.hosts]
 
-annotate_hosts_with_ssh_config_info()
+_annotate_hosts_with_ssh_config_info()
