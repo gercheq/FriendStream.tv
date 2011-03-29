@@ -24,6 +24,11 @@ VIMEO_URL_RE = re.compile(r'http://vimeo\.com/(?P<ident>\d+)')
 
 
 @task
+def raise_error():
+    raise NotImplementedError
+
+
+@task
 def poll_all_accounts():
     all_accounts = Account.objects.exclude(user=None).exclude(authinfo='')
     for account in all_accounts:
