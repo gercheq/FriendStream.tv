@@ -33,7 +33,14 @@ def home(request):
 
 @csrf_exempt
 def save_email(request):
-    email_address = request.POST['email']
+    if request.method != 'POST':
+        return HttpResponse('requires POST', status=405, content_type='text/plain')
+
+    try:
+        email_address = request.POST['email']
+    except KeyError:
+        return HttpResponse('requires parameter', status=400, content_type='text/plain')
+
     InterestedEmail.objects.create(email=email_address)
 
     return HttpResponse('OK', content_type='text/plain')
