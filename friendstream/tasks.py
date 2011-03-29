@@ -80,12 +80,7 @@ def poll_twitter(account):
     for status in tl:
         for url_obj in status.urls:
             url = url_obj.expanded_url or url_obj.url
-            try:
-                url = expand_url(url)
-            except httplib2.RedirectLimit:
-                continue
-            # TODO: what does httplib2 raise when there's no Location header? (does it raise anything when follow_redirects=False?)
-
+            url = expand_url(url)
             video = video_for_url(url)
             if not video:
                 continue
@@ -138,12 +133,7 @@ def poll_facebook(account):
         except KeyError:
             continue
 
-        try:
-            url = expand_url(url)
-        except httplib2.RedirectLimit:
-            continue
-        # TODO: what does httplib2 raise when there's no Location header? (does it raise anything when follow_redirects=False?)
-
+        url = expand_url(url)
         video = video_for_url(url)
         if not video:
             continue
@@ -197,6 +187,7 @@ def expand_url(orig_url):
     while True:
         try:
             resp, cont = h.request(url, method='HEAD', headers={'User-Agent': 'friendstream/1.0'})
+        # TODO: what does httplib2 raise when there's no Location header? (does it raise anything when follow_redirects=False?)
         except (httplib2.ServerNotFoundError, httplib.BadStatusLine, socket.timeout), exc:
             log.debug("Oops, %s for URL %s (use it for now): %s", type(exc).__name__, url, str(exc))
             return url
@@ -206,10 +197,12 @@ def expand_url(orig_url):
 
             redirects -= 1
             if redirects <= 0:
-                raise httplib2.RedirectLimit('', resp, cont)
+                log.debug("Oops, hit redirect limit for %s (use it for now)", url)
+                return url
             continue
         break
 
+    # Only save the result if it was an uneventful one.
     Url.objects.get_or_create(original=orig_url, defaults={'target': url})
     return url
 
