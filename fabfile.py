@@ -1,20 +1,49 @@
 from os.path import expanduser as _expanduser
 
-from fabric.api import run, cd, env
+from fabric.api import run, cd, env, local, put
 from fabric.contrib.project import rsync_project
 from paramiko.config import SSHConfig as _SSHConfig
 
 
-env.hosts = ['friendstream.tv']
+env.hosts = ['new.friendstream.tv']
 
-ROOT_DIR = '/home/gercheq/webapps/django'
+ROOT_DIR = '/var/www/friendstream'
+
+
+def _upload_git_project():
+    """
+    Upload the current project to a remote system, tar/gzipping during the move.
+
+    This function makes use of the ``/tmp/`` directory and the ``tar`` and
+    ``gzip`` programs/libraries; thus it will not work too well on Win32
+    systems unless one is using Cygwin or something similar.
+
+    ``upload_project`` will attempt to clean up the tarfiles when it finishes
+    executing.
+    """
+    from datetime import datetime
+    from os import getcwd, sep
+
+    tar_file = "/tmp/fab.%s.tar" % datetime.utcnow().strftime(
+        '%Y_%m_%d_%H-%M-%S')
+    cwd_name = getcwd().split(sep)[-1]
+    tgz_name = cwd_name + ".tar.gz"
+
+    # Instead of just tarring up the existing files, use git archive.
+    local("git archive --format=tar HEAD | gzip -9 > %s" % tar_file)
+
+    put(tar_file, cwd_name + ".tar.gz")
+    local("rm -f " + tar_file)
+    run("tar -xzf " + tgz_name)
+    run("rm -f " + tgz_name)
 
 
 def host_type():
     run('uname -s')
 
 def push():
-    rsync_project(remote_dir='%s/lib/python2.6' % ROOT_DIR, local_dir='friendstream', exclude='*.pyc')
+    with cd(ROOT_DIR):
+        _upload_git_project()
 
 upload = push
 
