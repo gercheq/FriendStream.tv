@@ -2,7 +2,10 @@ oauth2
 python-twitter
 redis
 -e git+https://github.com/django/django.git#egg=Django
-south
 -e git+https://github.com/ask/celery.git#egg=celery
+-e git+https://github.com/facebook/python-sdk.git#egg=facebook
 django-celery
 django-social-auth
+django-sentry
+south
+iso8601
