@@ -4,7 +4,7 @@ import logging
 from pprint import pformat
 import re
 import socket
-from urlparse import urljoin
+from urlparse import urljoin, urlparse
 
 from celery.signals import task_failure
 from celery.task import task
@@ -185,6 +185,9 @@ def expand_url(orig_url):
         pass
     else:
         return url_obj.target
+
+    if urlparse(orig_url).scheme not in ('http', 'https'):
+        return None
 
     log.debug('Scanning url %s', orig_url)
     h = httplib2.Http(timeout=10)
