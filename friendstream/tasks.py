@@ -216,13 +216,29 @@ def video_for_url(url):
     mo = YOUTUBE_URL_RE.match(url)
     if mo:
         video_id = mo.group('ident')
-        video, created = Video.objects.get_or_create(service='youtube.com', ident=video_id)
+
+        h = httplib2.Http(timeout=10)
+        url = ('http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=json' % video_id)
+        response, video_data = h.request(url, headers={'User-Agent': 'friendstream/1.0'})
+        if response.status != 200:
+            raise ValueError("Unexpected response %d %s getting data for YouTube video %s"
+                % (response.status, response.reason, video_id))
+
+        video, created = Video.objects.get_or_create(service='youtube.com', ident=video_id, data=video_data)
         return video
 
     mo = VIMEO_URL_RE.match(url)
     if mo:
         video_id = mo.group('ident')
-        video, created = Video.objects.get_or_create(service='vimeo.com', ident=video_id)
+
+        h = httplib2.Http(timeout=10)
+        url = ('http://vimeo.com/api/v2/video/%s.json' % video_id)
+        response, video_data = h.request(url, headers={'User-Agent': 'friendstream/1.0'})
+        if response.status != 200:
+            raise ValueError("Unexpected response %d %s getting data for Vimeo video %s"
+                % (response.status, response.reason, video_id))
+
+        video, created = Video.objects.get_or_create(service='vimeo.com', ident=video_id, data=video_data)
         return video
 
     # nope!

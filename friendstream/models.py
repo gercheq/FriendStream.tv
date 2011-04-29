@@ -84,10 +84,7 @@ class Video(models.Model):
 
     service = models.CharField(max_length=30)
     ident = models.CharField(max_length=100)
-
-    width = models.IntegerField(blank=True, null=True)
-    height = models.IntegerField(blank=True, null=True)
-    embed_code = models.TextField(blank=True)
+    data = models.TextField(blank=True)
 
 
 class UserStream(models.Model):
