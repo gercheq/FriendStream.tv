@@ -206,7 +206,14 @@ def expand_url(orig_url):
             return url
 
         if resp.status in (301, 302, 303, 307):
-            url = urljoin(url, resp['location'])
+            location = resp['location']
+            try:
+                # Either the location is 7 bits, in which case this works fine...
+                location.decode('ascii')
+            except UnicodeDecodeError:
+                # ...or it's erroneously UTF-8 and we need to %-escape the high bytes.
+                location = quote(location, safe=';/?:@&=+$,%')
+            url = urljoin(url, location)
 
             redirects -= 1
             if redirects <= 0:
