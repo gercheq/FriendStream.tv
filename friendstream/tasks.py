@@ -255,7 +255,7 @@ def video_for_url(url):
 
 def task_failed(exception, traceback, sender, task_id, signal, args, kwargs, einfo, **kw):
     exc_info = (type(exception), exception, traceback)
-    log.error('Job failed: %s: %s', exception.__class__.__name__, str(exception),
+    log.error('%s: %s', exception.__class__.__name__, str(exception),
         exc_info=exc_info,
         extra={
             'data': {'task_id': task_id, 'sender': sender, 'args': args, 'kwargs': kwargs},
