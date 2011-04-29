@@ -4,6 +4,7 @@ import logging
 from pprint import pformat
 import re
 import socket
+from urllib import quote
 from urlparse import urljoin, urlparse
 
 from celery.signals import task_failure
