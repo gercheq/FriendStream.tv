@@ -86,6 +86,9 @@ class Video(models.Model):
     ident = models.CharField(max_length=100)
     data = models.TextField(blank=True)
 
+    class Meta:
+        unique_together = (('service', 'ident'),)
+
 
 class UserStream(models.Model):
 

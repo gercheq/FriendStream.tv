@@ -243,7 +243,8 @@ def video_for_url(url):
             raise ValueError("Unexpected response %d %s getting data for YouTube video %s"
                 % (response.status, response.reason, video_id))
 
-        video, created = Video.objects.get_or_create(service='youtube.com', ident=video_id, data=video_data)
+        video, created = Video.objects.get_or_create(service='youtube.com', ident=video_id,
+            defaults={'data': video_data})
         return video
 
     mo = VIMEO_URL_RE.match(url)
@@ -257,7 +258,8 @@ def video_for_url(url):
             raise ValueError("Unexpected response %d %s getting data for Vimeo video %s"
                 % (response.status, response.reason, video_id))
 
-        video, created = Video.objects.get_or_create(service='vimeo.com', ident=video_id, data=video_data)
+        video, created = Video.objects.get_or_create(service='vimeo.com', ident=video_id,
+            defaults={'data': video_data})
         return video
 
     # nope!
