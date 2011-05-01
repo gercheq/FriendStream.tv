@@ -23,6 +23,9 @@ class Account(models.Model):
     last_updated = models.DateTimeField(default=datetime(2001, 1, 1))
     last_success = models.DateTimeField(default=datetime.now)
 
+    def __unicode__(self):
+        return u'%s (%s on %s)' % (self.display_name, self.ident, self.service)
+
 
 def update_twitter_account(sender, user, response, details, **kwargs):
     ident = response['id']
@@ -86,6 +89,9 @@ class Video(models.Model):
     ident = models.CharField(max_length=100)
     data = models.TextField(blank=True)
 
+    def __unicode__(self):
+        return u'%s on %s' % (self.ident, self.service)
+
     class Meta:
         unique_together = (('service', 'ident'),)
 
@@ -97,6 +103,9 @@ class UserStream(models.Model):
     posted = models.DateTimeField()
     poster = models.ForeignKey(Account)
     message = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return u'%s for %s' % (unicode(self.video), unicode(self.user))
 
 
 class InterestedEmail(models.Model):
@@ -110,3 +119,6 @@ class Url(models.Model):
     original = models.CharField(max_length=255, unique=True)
     target = models.CharField(max_length=255)
     added = models.DateTimeField(default=datetime.now)
+
+    def __unicode__(self):
+        return u'%s > %s' % (self.original, self.target)
