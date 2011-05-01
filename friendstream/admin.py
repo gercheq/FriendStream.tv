@@ -19,6 +19,7 @@ admin.site.register(Video, VideoAdmin)
 
 class UserStreamAdmin(admin.ModelAdmin):
     list_display = ('user', 'video_ident', 'poster_ident', 'posted')
+    raw_id_fields = ('user', 'video', 'poster')
 
     def video_ident(self, meh):
         return ':'.join((meh.video.service, meh.video.ident))
