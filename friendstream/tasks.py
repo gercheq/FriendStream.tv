@@ -32,7 +32,7 @@ def raise_error():
 
 @task
 def poll_all_accounts():
-    all_accounts = Account.objects.exclude(user=None).exclude(authinfo='')
+    all_accounts = Account.objects.exclude(user=None).exclude(authinfo='').exclude(stale=True)
     for account in all_accounts:
         log.debug('Posting job to poll for %s:%s', account.service, account.ident)
         poll_account.delay(account.pk, limited=True)
@@ -54,15 +54,22 @@ def poll_account(account_pk, limited=False):
         log.debug("Oops, account %r has no user?", account)
         return
 
-    if limited and account.last_updated > datetime.now() - timedelta(minutes=14):
-        log.debug("Skipping %s's %s stream (updated too soon)", account.user.username, account.service)
-        return
+    if limited:
+        now = datetime.now()
+        if account.user.last_login < now - timedelta(days=7):
+            log.debug("Marking %s's %s stream stale (hasn't logged in for a week)", account.user.username, account.service)
+            account.stale = True
+            account.save()
+            return
+        if account.last_updated > now - timedelta(minutes=14):
+            log.debug("Skipping %s's %s stream (updated too soon)", account.user.username, account.service)
+            return
 
     if account.service == 'twitter.com':
         poll_twitter(account)
     elif account.service == 'facebook.com':
         poll_facebook(account)
-    # TODO: vimeo, youtube, facebook accounts
+    # TODO: vimeo, youtube accounts
 
     account.last_updated = datetime.now()
     account.save()

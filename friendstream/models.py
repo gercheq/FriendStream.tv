@@ -17,6 +17,7 @@ class Account(models.Model):
     permalink_url = models.CharField(max_length=255, blank=True)
     avatar_url = models.CharField(max_length=255, blank=True)
     error = models.BooleanField(blank=True)
+    stale = models.BooleanField(blank=True)
 
     user = models.ForeignKey('auth.User', blank=True, null=True, related_name='accounts')
     authinfo = models.CharField(max_length=255, blank=True)

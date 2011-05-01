@@ -16,6 +16,7 @@ import oauth2 as oauth
 import social_auth.views
 
 from friendstream.models import UserStream, Account, InterestedEmail
+from friendstream.tasks import poll_account
 
 
 def root(request):
@@ -27,7 +28,17 @@ def root(request):
 @login_required
 def home(request):
     accounts = dict((acc.service.split('.')[0], acc) for acc in request.user.accounts.all())
-    return render_to_response('home.html', {'accounts': accounts},
+
+    had_stale_accounts = False
+    for acc in accounts.values():
+        if acc.stale:
+            had_stale_accounts = True
+            log.debug("Reviving %s's stale %s account (they logged in)", request.user.username, acc.service)
+            acc.stale = False
+            acc.save()
+            poll_account.delay(acc.pk)
+
+    return render_to_response('home.html', {'accounts': accounts, 'had_stale_accounts': had_stale_accounts},
         context_instance=RequestContext(request))
 
 
