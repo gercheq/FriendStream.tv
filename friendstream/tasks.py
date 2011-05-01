@@ -21,7 +21,7 @@ from friendstream.models import Account, Video, UserStream, Url
 
 log = logging.getLogger(__name__)
 
-YOUTUBE_URL_RE = re.compile(r'http://[^/]*youtube\.com/watch\?v=(?P<ident>[^&%]*)')
+YOUTUBE_URL_RE = re.compile(r'http://[^/]*youtube\.com/watch\?v=(?P<ident>[^&%#]*)')
 VIMEO_URL_RE = re.compile(r'http://vimeo\.com/(?P<ident>\d+)')
 
 
