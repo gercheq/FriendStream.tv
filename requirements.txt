@@ -1,6 +1,6 @@
 oauth2
 python-twitter
-redis
+djkombu
 Django
 celery
 -e git+https://github.com/facebook/python-sdk.git#egg=facebook

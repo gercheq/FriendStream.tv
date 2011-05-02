@@ -121,6 +121,9 @@ function setup_stream_panel() {
     $('.selected', $stream_container).removeClass('selected');
     $this.addClass('selected');
 
+    // Scroll to the video in the stream
+    $('#stream').scrollTo($this, 300);
+
     // Update the embed code
     var video_id = $this.find('.siv-id').html();
     var video_provider = $this.find('.siv-provider').html();
