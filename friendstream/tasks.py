@@ -246,6 +246,9 @@ def video_for_url(url):
         h = httplib2.Http(timeout=10)
         url = ('http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=json' % video_id)
         response, video_data = h.request(url, headers={'User-Agent': 'friendstream/1.0'})
+        if response.status == 400 and 'Private video' in video_data:
+            log.debug("Oops, someone linked to a private YouTube video %s, skipping", video_id)
+            return
         if response.status != 200:
             raise ValueError("Unexpected response %d %s getting data for YouTube video %s"
                 % (response.status, response.reason, video_id))
