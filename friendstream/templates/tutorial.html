@@ -1,0 +1,64 @@
+<a href="#tutorial" rel="facebox" class="" id="show-tutorial">Show Tutorial</a>
+
+<div id="tutorial" class="hidden">
+  <div  class="overlay-inner inner">
+    <div class="t-steps">
+
+      <div class="t-step rc" id="t-step1">
+        <h1>Quick Tutorial</h1>
+        <p>Welcome to FriendStream.TV</p>
+        <a class="button secondary">Next &raquo;</a>
+      </div>
+
+
+    </div>
+
+    <div class="dont-show">
+      <a href="#">Don't show tutorial again.</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+  $(document).ready(function(){
+    // $('#show-tutorial').click();
+  });
+
+</script>
+
+<style type="text/css">
+
+  .dont-show{
+    width: 100%;
+    border-top: 1px solid #DDD;
+    padding-top: 20px;
+    margin-top: 40px;
+    margin-bottom: -10px
+  }
+
+  .t-step{
+    display: none;
+  }
+
+  #t-step1{
+    display: block;
+  }
+
+  /*
+  ** FACEBOX
+  */
+  #facebox .inner{
+    width: 600px;
+    padding: 30px
+  }
+
+  #facebox h1{
+    color: #cd5c5c;
+    text-shadow: 0px -1px 1px #9d2929;
+    margin-bottom: 10px;
+  }
+
+  #facebox p{
+    font-size: 14px;
+  }
+</style>
