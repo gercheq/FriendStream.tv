@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import logging
 from urllib import quote
 from urlparse import parse_qsl
 
@@ -17,6 +18,9 @@ import social_auth.views
 
 from friendstream.models import UserStream, Account, InterestedEmail
 from friendstream.tasks import poll_account
+
+
+log = logging.getLogger(__name__)
 
 
 def root(request):
