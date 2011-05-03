@@ -114,9 +114,11 @@
             console.log('Tutorial Launched.');
 
             // Show Tutorial
-            $('#show-tutorial').click(function(){
-              return false;
-            });
+            // TODO(gercek): This creates an infinite loop.
+
+            jQuery.facebox({ div: '#tutorial' });
+
+            // $('#show-tutorial').click();
           }
 
           // If user clicks don't show
