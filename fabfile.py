@@ -5,7 +5,7 @@ from fabric.contrib.project import rsync_project
 from paramiko.config import SSHConfig as _SSHConfig
 
 
-env.hosts = ['new.friendstream.tv']
+env.hosts = ['friendstream.tv']
 
 ROOT_DIR = '/var/www/friendstream'
 
@@ -47,27 +47,26 @@ def push():
 
 upload = push
 
-def restart_apache():
-    with cd(ROOT_DIR):
-        run('apache2/bin/restart')
+def restart_web():
+    # TODO: what if supervisord isn't running?
+    sudo('supervisorctl restart web')
 
 def restart_worker():
     # TODO: what if supervisord isn't running?
-    with cd(ROOT_DIR):
-        run('supervisorctl restart friendstreamtv')
+    sudo('supervisorctl restart worker')
 
 def collectstatic():
-    with cd('%s/myproject' % ROOT_DIR):
-        run('PYTHONPATH=%s/lib/python2.6:%s/../../lib/python2.6 python2.6 manage.py collectstatic' % (ROOT_DIR, ROOT_DIR), shell=True)
+    with cd('%s/website' % ROOT_DIR):
+        run('%s/env/bin/python manage.py collectstatic' % (ROOT_DIR,), shell=True)
 
 def migrate_db():
-    with cd('%s/myproject' % ROOT_DIR):
-        run('PYTHONPATH=%s/lib/python2.6:%s/../../lib/python2.6 python2.6 manage.py migrate friendstream' % (ROOT_DIR, ROOT_DIR), shell=True)
+    with cd('%s/website' % ROOT_DIR):
+        run('%s/env/bin/python manage.py migrate friendstream' % (ROOT_DIR,), shell=True)
 
 def restart():
     collectstatic()
     migrate_db()
-    restart_apache()
+    restart_web()
     restart_worker()
 
 
