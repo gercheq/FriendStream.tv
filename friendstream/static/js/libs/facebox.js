@@ -83,7 +83,7 @@
 
   $.extend($.facebox, {
     settings: {
-      opacity      : 0.6,
+      opacity      : 0.75,
       overlay      : true,
       loadingImage : '/static/css/images/loading.gif',
       closeImage   : '/static/css/images/closelabel.png',
