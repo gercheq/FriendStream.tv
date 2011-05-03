@@ -10,6 +10,7 @@ from urlparse import urljoin, urlparse
 from celery.signals import task_failure
 from celery.task import task
 from django.conf import settings
+import django.db
 import iso8601
 import facebook
 import httplib
@@ -234,7 +235,11 @@ def expand_url(orig_url):
         break
 
     # Only save the result if it was an uneventful one.
-    Url.objects.get_or_create(original=orig_url, defaults={'target': url})
+    try:
+        Url.objects.get_or_create(original=orig_url, defaults={'target': url})
+    except django.db.IntegrityError:
+        # Guess we can't cache that URL. Oh, well.
+        pass
     return url
 
 
