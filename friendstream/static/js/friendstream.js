@@ -423,6 +423,7 @@ function onytplayerStateChange(newState) {
 
 
 
+
 /*
 ** DEPRECATED
 **
@@ -557,6 +558,52 @@ function setup_navigation(){
 
       return false;
   });
+}
+
+function setup_tutorial(){
+  /*
+   * Tutorial
+   */
+   setTimeout(function () {
+
+      var skip_tutorial = $.cookie('skip_tutorial');
+
+      // Skip tutorial if the tutorial cookie exists
+      if( skip_tutorial == 1 ){
+        console.log('Tutorial Skipped.');
+      } else {
+        console.log('Tutorial Launched.');
+
+        // Show Tutorial
+        // TODO(gercek): This creates an infinite loop.
+
+        jQuery.facebox({ div: '#tutorial' });
+
+        // $('#show-tutorial').click();
+      }
+
+      // If user clicks don't show
+      // Set the cookie and don't show tutorial again
+      $('.dont-show a').live('click', function(){
+        $.facebox.close();
+        $.cookie('skip_tutorial', '1', { expires: 1000 });
+      });
+  }, 100);
+}
+
+
+function setup_iscroll(){
+
+  var myScroll;
+  function loaded() {
+  	myScroll = new iScroll('stream');
+  }
+
+  document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+  document.addEventListener('DOMContentLoaded', loaded, false);
+
+
 }
 
 

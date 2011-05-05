@@ -21,6 +21,11 @@
          </div>
 
           <div id="stream" class="sidebar">
+
+              <div id="aggregated-stream" class="sidebar-inner">
+               <div class="loading"><img src="{{ STATIC_URL }}css/images/ajax-loader.gif"/ > Please wait while we are downloading videos shared by your friends...</div>
+              </div>
+
               <div id="sidebar-account" class="sidebar-inner">
                 {% if accounts.facebook %}
                     <h3><img src="{{ STATIC_URL }}css/images/facebook.png" width="40"> {{ accounts.facebook.display_name }} (<a href="{% url disconnect backend="facebook" %}">disconnect</a>)</h3>
@@ -44,11 +49,7 @@
                   {% include 'featured.html' %}
               </div>
               {% endcomment %}
-
-              <div id="aggregated-stream" class="sidebar-inner">
-               <div class="loading"><img src="{{ STATIC_URL }}css/images/ajax-loader.gif"/ > Please wait while we are downloading videos shared by your friends...</div>
-              </div>
-          </div><!-- end of .sidebar -->
+          </div>
 
          <!--
 
@@ -92,45 +93,26 @@
 
      {% include 'tutorial.html' %}
 
-    <script type="text/javascript">
+{% endblock %}
 
-        $(document).ready(function () {
-          setup_stream_panel();
-          setup_navigation();
-          setup_video_navigation();
-          calculate_dimensions();
-          load_videos('videos.json');
+{% block scripts_bottom %}
+  {{ block.super }}
 
+  <script src="{{ STATIC_URL }}js/libs/iscroll-min.js"></script>
 
-          /*
-           * Tutorial
-           */
-          var skip_tutorial = $.cookie('skip_tutorial');
+  <script type="text/javascript">
+  $(document).ready(function () {
+    setup_stream_panel();
+    setup_navigation();
+    setup_video_navigation();
+    calculate_dimensions();
+    load_videos('videos.json');
 
-          // Skip tutorial if the tutorial cookie exists
-          if( skip_tutorial == 1 ){
-            console.log('Tutorial Skipped.');
-          } else {
-            console.log('Tutorial Launched.');
+    // window.addEventListener('load', setup_tutorial, false);
 
-            // Show Tutorial
-            // TODO(gercek): This creates an infinite loop.
+    // setup_iscroll();
 
-            jQuery.facebox({ div: '#tutorial' });
-
-            // $('#show-tutorial').click();
-          }
-
-          // If user clicks don't show
-          // Set the cookie and don't show tutorial again
-          $('.dont-show a').live('click', function(){
-            $.facebox.close();
-            $.cookie('skip_tutorial', '1', { expires: 1000 });
-          });
-
-        });
-
-
-    </script>
-
+    var myScroll = new iScroll('stream');
+  });
+  </script>
 {% endblock %}
