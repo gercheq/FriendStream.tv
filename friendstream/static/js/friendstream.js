@@ -148,6 +148,9 @@ function setup_stream_panel() {
     $video_container.find('.friend-name').html(friend_name);
 
   });
+
+  var myScroll = new iScroll('stream');
+
 }
 
 function show_first_video() {

@@ -91,14 +91,14 @@
      </div> <!--! end of #wrapper -->
 
 
-     {% include 'tutorial.html' %}
+     {# include 'tutorial.html' #}
 
 {% endblock %}
 
 {% block scripts_bottom %}
   {{ block.super }}
 
-  <script src="{{ STATIC_URL }}js/libs/iscroll-min.js"></script>
+  <script src="{{ STATIC_URL }}js/libs/iscroll.js"></script>
 
   <script type="text/javascript">
   $(document).ready(function () {
@@ -112,7 +112,7 @@
 
     // setup_iscroll();
 
-    var myScroll = new iScroll('stream');
+
   });
   </script>
 {% endblock %}
