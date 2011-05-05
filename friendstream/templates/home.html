@@ -90,7 +90,7 @@
      </div> <!--! end of #wrapper -->
 
 
-     {# include 'tutorial.html' #}
+     {% include 'tutorial.html' %}
 
     <script type="text/javascript">
 
@@ -104,7 +104,7 @@
 
           /*
            * Tutorial
-
+           */
           var skip_tutorial = $.cookie('skip_tutorial');
 
           // Skip tutorial if the tutorial cookie exists
@@ -127,7 +127,6 @@
             $.facebox.close();
             $.cookie('skip_tutorial', '1', { expires: 1000 });
           });
-          */
 
         });
 
