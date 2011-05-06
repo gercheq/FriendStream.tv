@@ -15,6 +15,7 @@ import iso8601
 import facebook
 import httplib
 import httplib2
+from pystatsd import Client
 import twitter
 
 from friendstream.models import Account, Video, UserStream, Url
@@ -75,6 +76,10 @@ def poll_account(account_pk, limited=False):
     account.last_updated = datetime.now()
     account.save()
 
+    if settings.STATSD_SERVER:
+        statz = Client(*settings.STATSD_SERVER)
+        statz.increment('fstv.account_updated')
+
 
 def poll_twitter(account):
     # Fetch the Twitter user's neighborhood.
@@ -102,6 +107,7 @@ def poll_twitter(account):
             if not video:
                 continue
 
+            statz = Client(*settings.STATSD_SERVER) if settings.STATSD_SERVER else None
             try:
                 us = UserStream.objects.get(user=account.user, video=video)
             except UserStream.DoesNotExist:
@@ -122,8 +128,13 @@ def poll_twitter(account):
                     message=status.text,
                 )
                 us.save()
+
+                if statz:
+                    statz.increment('fstv.video.new')
             else:
                 log.debug("Video for %s already in %s's stream", url, account.user.username)
+                if statz:
+                    statz.increment('fstv.video.old')
 
     log.debug('Done scanning statuses for %s', account.user.username)
 
@@ -157,6 +168,7 @@ def poll_facebook(account):
         if not video:
             continue
 
+        statz = Client(*settings.STATSD_SERVER) if settings.STATSD_SERVER else None
         try:
             us = UserStream.objects.get(user=account.user, video=video)
         except UserStream.DoesNotExist:
@@ -181,18 +193,26 @@ def poll_facebook(account):
                 message=link.get('message', ''),
             )
             us.save()
+
+            if statz:
+                statz.increment('fstv.video.new')
         else:
             log.debug("Video for %s already in %s's stream", url, account.user.username)
+            if statz:
+                statz.increment('fstv.video.old')
 
     log.debug('Done scanning facebook home for %s', account.user.username)
 
 
 def expand_url(orig_url):
+    statz = Client(*settings.STATSD_SERVER) if settings.STATSD_SERVER else None
     try:
         url_obj = Url.objects.get(original=orig_url)
     except Url.DoesNotExist:
         pass
     else:
+        if statz:
+            statz.increment('fstv.checked_url.database')
         return url_obj.target
 
     if urlparse(orig_url).scheme not in ('http', 'https'):
@@ -233,6 +253,9 @@ def expand_url(orig_url):
                 return url
             continue
         break
+
+    if statz:
+        statz.increment('fstv.checked_url.http')
 
     # Only save the result if it was an uneventful one.
     try:

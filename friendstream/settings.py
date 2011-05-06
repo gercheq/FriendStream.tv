@@ -23,6 +23,7 @@ CELERYBEAT_SCHEDULE = {
         'schedule': timedelta(minutes=15),
     },
 }
+STATSD_SERVER = ('hammer.wallrazer.com', 8125)
 
 LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/'
