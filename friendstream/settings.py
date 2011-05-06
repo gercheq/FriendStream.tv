@@ -13,10 +13,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-BROKER_BACKEND = 'redis'
-BROKER_HOST = 'localhost'
-BROKER_PORT = 6379
-BROKER_VHOST = '0'
+BROKER_BACKEND = 'djkombu.transport.DatabaseTransport'
 
 from datetime import timedelta
 
