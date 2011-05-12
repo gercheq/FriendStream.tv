@@ -1,6 +1,6 @@
 from os.path import expanduser as _expanduser
 
-from fabric.api import run, cd, env, local, put
+from fabric.api import run, cd, env, local, put, sudo
 from fabric.contrib.project import rsync_project
 from paramiko.config import SSHConfig as _SSHConfig
 
