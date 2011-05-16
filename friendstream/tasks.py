@@ -233,7 +233,7 @@ def expand_url(orig_url):
             log.debug("Oops, %s isn't really an URL at all, skipping", url)
             return None
         # TODO: what does httplib2 raise when there's no Location header? (does it raise anything when follow_redirects=False?)
-        except (httplib2.ServerNotFoundError, httplib.BadStatusLine, socket.timeout), exc:
+        except (httplib2.ServerNotFoundError, httplib.BadStatusLine, socket.timeout, socket.error), exc:
             log.debug("Oops, %s for URL %s (use it for now): %s", type(exc).__name__, url, str(exc))
             return url
 
