@@ -145,7 +145,7 @@ def poll_facebook(account):
     try:
         home = facepi.get_object('me/home', limit=100)
     except facebook.GraphAPIError, exc:
-        if exc.type == 'OAuthException':
+        if exc.type in ('OAuthException', 'IDInvalidException'):
             # mark account as busted
             log.debug("Oops, facebook user %s (%s) has a bad key", account.display_name, account.ident)
             account.error = True
