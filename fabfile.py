@@ -35,6 +35,8 @@ def _upload_git_project():
     put(tar_file, cwd_name + ".tar.gz")
     local("rm -f " + tar_file)
     run("tar -xzf " + tgz_name)
+    # We can't easily make tar leave the existing file perms in place, so just make sure everything's group writable.
+    run("chmod -R g+w .")
     run("rm -f " + tgz_name)
 
 
