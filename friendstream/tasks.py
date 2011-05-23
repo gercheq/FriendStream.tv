@@ -126,6 +126,8 @@ def poll_twitter(account):
                     poster=poster,
                     posted=created_at,
                     message=status.text,
+                    message_service='twitter.com',
+                    message_ident=status.id,
                 )
                 us.save()
 
@@ -191,6 +193,8 @@ def poll_facebook(account):
                 poster=poster,
                 posted=created_at,
                 message=link.get('message', ''),
+                message_service='facebook.com',
+                message_ident=link['id'],
             )
             us.save()
 

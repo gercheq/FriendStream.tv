@@ -104,6 +104,8 @@ class UserStream(models.Model):
     posted = models.DateTimeField()
     poster = models.ForeignKey(Account)
     message = models.TextField(blank=True)
+    message_service = models.CharField(max_length=30, blank=True)
+    message_ident = models.CharField(max_length=100, blank=True)
 
     def __unicode__(self):
         return u'%s for %s' % (unicode(self.video), unicode(self.user))
