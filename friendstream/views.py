@@ -96,6 +96,11 @@ def videos(request):
             'avatar_url': us.poster.avatar_url,
         },
         'message': us.message,
+        'message_obj': {
+            'message': us.message,
+            'service': us.message_service or None,
+            'ident': us.message_ident or None,
+        },
         'id': us.pk,
     } for us in stream)
 
