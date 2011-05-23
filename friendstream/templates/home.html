@@ -78,13 +78,17 @@
          <div id="video-embed" class=""></div>
 
          <div id="video-details" class="clearfix">
-           <div class="avatar"></div>
-           <div class="metadata">
-             <h3></h3>
-             <blockquote></blockquote>
-             <p><span class="icon">Shared on </span> <span class="friend-name"><a href="#" target="_blank"></a></span></p>
-           </div>
-         </div>
+            <div class="avatar-container">
+              <div class="avatar-shadow"></div>
+              <div class="avatar"></div>
+            </div>
+
+            <div class="metadata">
+              <h3></h3>
+              <blockquote></blockquote>
+              <p><span class="icon">Shared on </span> <span class="friend-name"><a href="#" target="_blank"></a></span></p>
+            </div>
+          </div>
        </div>
 
      </div> <!--! end of #wrapper -->
@@ -132,6 +136,27 @@
         });
 
 
+    </script>
+
+
+
+
+    <!-- GET SATISFACTION - CUSTOMER SUPPORT -->
+    <script type="text/javascript" charset="utf-8">
+      var is_ssl = ("https:" == document.location.protocol);
+      var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+      document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+      var feedback_widget_options = {};
+
+      feedback_widget_options.display = "overlay";
+      feedback_widget_options.company = "friendstreamtv";
+      feedback_widget_options.placement = "bottom";
+      feedback_widget_options.color = "#222";
+      feedback_widget_options.style = "question";
+      var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
     </script>
 
 {% endblock %}

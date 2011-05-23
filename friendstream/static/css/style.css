@@ -793,16 +793,44 @@ footer a:hover{
   padding-top:30px;
 }
 
+.avatar-container{
+    background: white;
+    border: 1px solid #CCC;
+    float: left;
+    max-height: 130px;
+    overflow: hidden;
+    padding: 5px;
+    width: 80px;
+}
+
+.avatar-shadow{
+    background: white;
+    border: 1px solid #CCC;
+    float: left;
+    max-height: 100%;
+    overflow: hidden;
+    padding: 5px;
+    width: 100%;
+    display:none;
+
+}
+
 .avatar{
-  border: 1px solid #CCC;
   background: #FFF;
-  padding: 4px;
   float: left;
+  max-height: 130px;
+  overflow: hidden;
+  width: 80px;
+  -moz-box-shadow: 0 0 5px #000 inset;
+  -webkit-box-shadow: 0 0 5px #000 inset;
+  box-shadow: 0 0 5px #000 inset;
 }
 
 .avatar img {
   width: 80px;
   display: block;
+  max-height:130px;
+  overflow: hidden;
 }
 
 #video-details .metadata{
@@ -1216,6 +1244,14 @@ footer a:hover{
 
 
 
+
+
+
+
+
+a.fdbk_tab_bottom{
+    right: 70px !important;
+}
 
 
 

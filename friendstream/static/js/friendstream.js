@@ -262,7 +262,7 @@ function init_cufon(){
         "posted": "2011-03-09T00:45:47"
     }
 */
-var video_json;
+var videos;
 
 function load_videos(json_url){
 
@@ -276,8 +276,7 @@ function load_videos(json_url){
     timeout: 30000, /* Timeout in ms */
     success: function(json_data) {
 
-
-      video_json = json_data;
+      videos = json_data;
       var items = [];
       $.each(json_data, function(key, val) {
 
