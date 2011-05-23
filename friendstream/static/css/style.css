@@ -790,6 +790,7 @@ footer a:hover{
   position: absolute;
   bottom: 0;
   height: 160px;
+  width: 100%;
   padding-top:30px;
 }
 
@@ -818,23 +819,34 @@ footer a:hover{
 .avatar{
   background: #FFF;
   float: left;
-  max-height: 130px;
+  max-height: 120px;
   overflow: hidden;
   width: 80px;
-  -moz-box-shadow: 0 0 5px #000 inset;
-  -webkit-box-shadow: 0 0 5px #000 inset;
-  box-shadow: 0 0 5px #000 inset;
+  position: relative;
+}
+
+.fa-shadow{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    -moz-box-shadow: 0 0 5px #333 inset;
+    -webkit-box-shadow: 0 0 5px #333 inset;
+    box-shadow: 0 0 5px #333 inset;
 }
 
 .avatar img {
   width: 80px;
   display: block;
-  max-height:130px;
   overflow: hidden;
 }
 
 #video-details .metadata{
   padding-left: 105px;
+  font-size: 12px;
+  height: 16px;
+  line-height: 16px;
 }
 
 #video-details h3{
@@ -843,13 +855,89 @@ footer a:hover{
 
 #video-details blockquote {
   font-size: 16px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   line-height: 1.5;
 }
 
 #video-details .icon {
-    display: none;
+    opacity: 1;
+    text-indent: 0;
 }
+
+#video-details .user-actions{
+    color: #999;
+}
+
+#video-details .ua-user{
+    float: left;
+}
+
+#video-details .ua-options{
+
+}
+/*
+<div class="ua-options">
+  <div class="fb-options">
+    <div class="fb-like">Like</div>
+    <div class="fb-comment">Comment</div>
+    <div class="fb-share">Share</div>
+  </div>
+  <div class="tw-options">
+    <div class="tw-favorite">Favorite</div>
+    <div class="tw-retweet">Retweet</div>
+    <div class="tw-reply">Reply</div>
+  </div>
+</div>
+*/
+.ua-options{
+    color: #AAA;
+}
+
+.fb-options,
+.fb-like,
+.fb-comment,
+.fb-share,
+.tw-options,
+.tw-favorite,
+.tw-retweet,
+.tw-reply{
+    float: left;
+    margin-right: 10px;
+    cursor: pointer;
+    line-height: 18px;
+    height: 16px;
+    font-size: 12px;
+}
+
+.fb-options,
+.tw-options{
+    margin-left: 10px;
+    border-left: 1px solid #CCC;
+    padding-left: 10px;
+}
+
+.tw-favorite span,
+.tw-retweet span,
+.tw-reply span{
+    background: url('images/twitter-sprite.png') no-repeat 0 0;
+    width: 16px;
+    height: 16px;
+    display:inline-block;
+    vertical-align: top;
+    margin-right: 4px;
+}
+
+.tw-reply span{ background-position: 0 0; }
+.tw-favorite span{ background-position: -32px 0; }
+.tw-retweet span{ background-position: -80px 0; }
+
+.tw-reply:hover span{ background-position: -16px 0; }
+.tw-favorite:hover span{ background-position: -48px 0; }
+.tw-retweet:hover span{ background-position: -96px 0; }
+
+
+
+
 
 
 /****************************************************************************

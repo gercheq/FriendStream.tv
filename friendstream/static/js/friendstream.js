@@ -95,8 +95,6 @@ function setup_stream_panel() {
 
       $stream_container.addClass('active');
     }
-
-
   });
 
   /*
@@ -130,22 +128,32 @@ function setup_stream_panel() {
     var embed_code = generate_embed_code(video_provider, video_id);
     $video_container.find('#video-embed').html(embed_code);
 
-    // Update user details
+    // Get details from the stream item
     var video_title = $this.find('.siv-title').html();
-    var video_service = $this.find('.friend-provider').html().split('.',1);
+    var friend_provider = $this.find('.friend-provider').html().split('.',1);
     var friend_avatar = $this.find('.friend-avatar').html();
     var friend_name = $this.find('.friend-name').html();
     var friend_message = $this.find('.friend-message').html();
 
+    // Update current video details
     $video_container.find('h3').html(video_title);
-    // WTF - The code below is not working.
-    // video_service is assigned correctly but
-    // class is not getting added to the p element :/
-    // alert(video_service);
-    // $video_container.find('.metadata').addClass(video_service);
     $video_container.find('.avatar').html(friend_avatar);
     $video_container.find('blockquote').html(friend_message);
     $video_container.find('.friend-name').html(friend_name);
+
+    var icon_image = "<img src='http://friendstream.tv/static/css/images/icons/" + friend_provider + ".png' />";
+    $video_container.find('.icon').html(icon_image).attr('data-service',friend_provider);
+
+    if (friend_provider == "twitter"){
+      // Setup Reply, Retweet and Favorite
+      var actions = "";
+
+    } else if (friend_provider == "facebook") {
+      // Setup Like, Comment and Share
+      var actions = "";
+    }
+    $video_container.find('.ua-actions').html()
+
 
   });
 }
@@ -279,6 +287,7 @@ function load_videos(json_url){
       var items = [];
       $.each(json_data, function(key, val) {
 
+
         //
         // SETUP AVATAR (clean up twitter avatar_url)
         //
@@ -329,6 +338,7 @@ function load_videos(json_url){
                           <span class="icon"></span> \
                           <span class="friend-name ' + json_data[key].poster.ident + '">' + json_data[key].poster.display_name + '</span>\
                           <div class="hidden friend-avatar">\
+                            <div class="fa-shadow"></div>\
                             <img src="' +  avatar_url + '">\
                           </div>\
                           <div class="hidden friend-provider">' + json_data[key].poster.service + '</div>\
@@ -339,35 +349,18 @@ function load_videos(json_url){
         items.push(video);
       });
 
-
-
-      var tmp = items.join('');
-
+      var aggregated_stream = items.join('');
 
       // if the JSON is not empty
       if(items.length){
-
-        // alert('items length is ' + items.length);
-
         video_list_empty = 0;
-
-        $('#aggregated-stream').html(tmp);
-
-        // Get video details for each video in the stream from APIs
-        $('.s-item').each(function(){
-          // get_video_details($(this));
-        });
-
-        // Show the first video
-        show_first_video();
+        $('#aggregated-stream').html(aggregated_stream);
+        show_first_video(); // Show the first video
       }
       else {
-        // if the videos.json file is empty, make another ajax request in 15seconds
-        setTimeout(
-             'load_videos("/videos.json")', /* Try again after.. */
-             "30000"); /* milliseconds (15seconds) */
+        // Try again after 10seconds
+        setTimeout('load_videos("/videos.json")', "10000");
       }
-
     },
     error: function(XMLHttpRequest, textStatus, errorThrown){
           alert("error: ", textStatus + " (" + errorThrown + ")");
@@ -375,11 +368,7 @@ function load_videos(json_url){
               'load_videos("/videos.json")', /* Try again after.. */
               "10000"); /* milliseconds (10seconds) */
     }
-
   });
-
-
-
 }
 
 /*
@@ -401,44 +390,6 @@ function generate_embed_code(video_provider, video_id){
 
 
 /*
-** Get video details such as thumbnail, title, description
-** from respective APIs. Currently supporting only Youtube and Vimeo
-*/
-function get_video_details($stream_video) {
-
-  var video_id = $stream_video.find('.siv-id').html();
-  var video_provider = $stream_video.find('.siv-provider').html();
-
-  if (video_provider == "youtube.com"){
-    var url = "http://gdata.youtube.com/feeds/api/videos/" + video_id + "?v=2&alt=json"
-    $.get(url, function(data) {
-      if(data.entry){
-        var video_title = data.entry.title.$t || "";
-        var video_desc = data.entry.media$group.media$description.$t  || "";
-        var video_url = data.entry.media$group.media$thumbnail[0].url  || "";
-
-        $stream_video.find('h3').html(video_title);
-        $stream_video.find('.siv-desc').html(video_desc);
-        $stream_video.find('.si-thumb img').attr('src',  video_url);
-
-      } else {
-        console.log("Video " + video_id + " can't be loaded from " + video_provider +".");
-      }
-    });
-  } else if (video_provider == "vimeo.com") {
-    var url =  "http://vimeo.com/api/v2/video/" + video_id + ".json?callback=?";
-
-    $.getJSON(url, {format: "json"}, function(data) {
-        $stream_video.find('h3').html( data[0].title);
-        $stream_video.find('.siv-desc').html( data[0].description );
-        $stream_video.find('.si-thumb img').attr('src', data[0].thumbnail_small);
-    });
-  }
-}
-
-
-
-/*
  * NON-STOP VIDEO
  */
 function onYouTubePlayerReady(playerId) {
@@ -451,27 +402,6 @@ function onytplayerStateChange(newState) {
 }
 
 
-
-/*
-** DEPRECATED
-**
-function get_thumbnail(video_provider, video_id, size)
-{
-  if (video_id === null){ return ""; }
-
-  size = (size === null) ? "small" : size;
-
-  if (video_provider == "youtube.com") {
-    if(size == "small"){
-      return "http://img.youtube.com/vi/" + video_id + "/2.jpg";
-    } else {
-      return "http://img.youtube.com/vi/" + video_id + "/0.jpg";
-    }
-  } else if (video_provider == "vimeo.com") {
-    return "no vimeo support"
-  }
-}
-*/
 
 
 /*****************************************************
@@ -560,13 +490,13 @@ function setup_video_navigation(){
         $('#vc-prev').click();
       break;
       case arrow.up:
-        //..
+        $('#vc-next').click();
       break;
       case arrow.right:
         $('#vc-next').click();
       break;
       case arrow.down:
-        //..
+        $('#vc-prev').click();
       break;
     }
 

@@ -80,7 +80,7 @@ def videos_old(request):
 @login_required
 def videos(request):
     # TODO: handle paging parameters
-    stream = UserStream.objects.filter(user=request.user).order_by('-posted').select_related()[:40]
+    stream = UserStream.objects.filter(user=request.user).order_by('-posted').select_related()[:100]
 
     stream_data = ({
         'posted': us.posted,
