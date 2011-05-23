@@ -41,31 +41,38 @@ def _upload_git_project():
 
 
 def host_type():
+    """Show the server's OS (for testing)."""
     run('uname -s')
 
 def push():
+    """Upload your working copy to the server."""
     with cd(ROOT_DIR):
         _upload_git_project()
 
 upload = push
 
 def restart_web():
+    """Restart the web server (gunicorns) only."""
     # TODO: what if supervisord isn't running?
     sudo('supervisorctl restart web')
 
 def restart_worker():
+    """Restart the workers (celerys) only."""
     # TODO: what if supervisord isn't running?
     sudo('supervisorctl restart worker')
 
 def collectstatic():
+    """Collect static files for nginx. (Necessary for static file changes to show!)"""
     with cd('%s/website' % ROOT_DIR):
         run('%s/env/bin/python manage.py collectstatic' % (ROOT_DIR,), shell=True)
 
 def migrate_db():
+    """Run outstanding database schema migrations (with South)."""
     with cd('%s/website' % ROOT_DIR):
         run('%s/env/bin/python manage.py migrate friendstream' % (ROOT_DIR,), shell=True)
 
 def restart():
+    """Restart everything. (Collects static files, runs schema migrations, restarts webs and workers.)"""
     collectstatic()
     migrate_db()
     restart_web()
