@@ -122,7 +122,7 @@ function setup_stream_panel() {
     $this.addClass('selected');
 
     // Scroll to the video in the stream
-    $('#stream').scrollTo($this, 300);
+    // $('#stream').scrollTo($this, 300);
 
     // Update the embed code
     var video_id = $this.find('.siv-id').html();
@@ -274,13 +274,14 @@ function load_videos(json_url){
     async: true, /* If set to non-async, browser shows page as "Loading.."*/
     cache: false,
     timeout: 30000, /* Timeout in ms */
-    success: function(json_data) {
-
+    success: function(`json_data`) {
       videos = json_data;
       var items = [];
       $.each(json_data, function(key, val) {
 
-        // clean up twitter avatar_url
+        //
+        // SETUP AVATAR (clean up twitter avatar_url)
+        //
         if (json_data[key].poster.service == "twitter.com"){
           var avatar_url_small = json_data[key].poster.avatar_url;
           var avatar_url = avatar_url_small.replace("_normal", "_reasonably_small");
@@ -288,12 +289,39 @@ function load_videos(json_url){
           var avatar_url = "https://graph.facebook.com/" + json_data[key].poster.ident + "/picture?type=large";
         }
 
+
+        //
+        // SETUP VIDEO DETAILS
+        //
+
+        // Get video details from the saved JSON file
+        // (Note: Mark saves the original video JSON as an attribute in videos.json)
+        var video_data = json_data[key].video.data;
+        var obj = $.parseJSON(video_data);
+
+        if (json_data[key].video.service == "youtube.com"){
+          var video_title = obj.entry.title.$t;
+          var video_description = obj.entry.media$group.media$description.$t;
+          var video_thumbnail = obj.entry.media$group.media$thumbnail[0].url;
+        }
+
+        else if (json_data[key].video.service == "vimeo.com"){
+          var video_title = obj[0].title;
+          var video_description = obj[0].description;
+          var video_thumbnail = obj[0].thumbnail_medium;
+        }
+
+
+
+        //
+        // CREATE STREAM ITEMS
+        //
         var video ='<div class="s-item clearfix ' + json_data[key].poster.service.split('.',1) + '" id="video-'+ json_data[key].id + '">\
-                      <div class="si-thumb"><img src="/static/css/images/video_thumb_default.jpg"/></div>\
+                      <div class="si-thumb"><img src="' + video_thumbnail + '"/></div>\
                       <div class="si-info">\
                         <div class="si-video">\
-                          <h3 class="siv-title">Video Title</h3>\
-                          <div class="siv-desc hidden">Video Description</div>\
+                          <h3 class="siv-title">' + video_title + '</h3>\
+                          <div class="siv-desc hidden">' + video_description + '</div>\
                           <div class="siv-id hidden">' + json_data[key].video.ident + '</div>\
                           <div class="siv-provider hidden">' + json_data[key].video.service + '</div>\
                         </div>\
@@ -311,6 +339,8 @@ function load_videos(json_url){
         items.push(video);
       });
 
+
+
       var tmp = items.join('');
 
 
@@ -325,7 +355,7 @@ function load_videos(json_url){
 
         // Get video details for each video in the stream from APIs
         $('.s-item').each(function(){
-          get_video_details($(this));
+          // get_video_details($(this));
         });
 
         // Show the first video
@@ -343,7 +373,7 @@ function load_videos(json_url){
           alert("error: ", textStatus + " (" + errorThrown + ")");
           setTimeout(
               'load_videos("/videos.json")', /* Try again after.. */
-              "30000"); /* milliseconds (15seconds) */
+              "10000"); /* milliseconds (10seconds) */
     }
 
   });

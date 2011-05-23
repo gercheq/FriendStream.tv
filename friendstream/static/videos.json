@@ -9,7 +9,8 @@
         "message": "Current status: http://t.co/ltgYjyB (NSFW)",
         "video": {
             "ident": "RJC8pJ7xbB0",
-            "service": "youtube.com"
+            "service": "youtube.com",
+            "data": "JSON"
         },
         "id": 30,
         "posted": "2011-03-09T00:45:47"
