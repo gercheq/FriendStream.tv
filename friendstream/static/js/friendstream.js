@@ -274,7 +274,7 @@ function load_videos(json_url){
     async: true, /* If set to non-async, browser shows page as "Loading.."*/
     cache: false,
     timeout: 30000, /* Timeout in ms */
-    success: function(`json_data`) {
+    success: function(json_data) {
       videos = json_data;
       var items = [];
       $.each(json_data, function(key, val) {
