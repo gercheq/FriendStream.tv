@@ -87,6 +87,7 @@ def videos(request):
         'video': {
             'service': us.video.service,
             'ident': us.video.ident,
+            'data': us.video.data,
         },
         'poster': {
             'service': us.poster.service,
